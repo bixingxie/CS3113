@@ -1,9 +1,11 @@
 
 #include "Matrix.h"
 #include <math.h>
+#include "Vector3.h"
 
 #include <iostream>
 using namespace std;
+
 
 Matrix::Matrix() {
     Identity();
@@ -233,3 +235,14 @@ void Matrix::display(){
     
     cout << endl;
 }
+
+Vector3 Matrix::operator*(const Vector3& v){
+    Vector3 newVec(0.0f, 0.0f, 0.0f);
+    
+    newVec.x = m[0][0] * v.x + m[1][0] * v.y + m[2][0] * v.z + m[3][0] * 1;
+    newVec.y = m[0][1] * v.x + m[1][1] * v.y + m[2][1] * v.z + m[3][1] * 1;
+    newVec.z = m[0][2] * v.x + m[1][2] * v.y + m[2][2] * v.z + m[3][2] * 1;
+    
+    return newVec;
+}
+

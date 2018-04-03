@@ -11,7 +11,8 @@
 		05F067612071880E00FC3385 /* items_spritesheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F067602071880E00FC3385 /* items_spritesheet.png */; };
 		05F067632071881100FC3385 /* spritesheet_wood.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F067622071881100FC3385 /* spritesheet_wood.png */; };
 		05F067652071881500FC3385 /* sheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F067642071881400FC3385 /* sheet.png */; };
-		05F067672071886F00FC3385 /* SatCollision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F067662071886F00FC3385 /* SatCollision.cpp */; };
+		05F0676A207317C500FC3385 /* SatCollision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F06769207317C500FC3385 /* SatCollision.cpp */; };
+		05F0676E207319D200FC3385 /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0676D207319D200FC3385 /* Vector3.cpp */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -33,8 +34,10 @@
 		05F067602071880E00FC3385 /* items_spritesheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = items_spritesheet.png; sourceTree = "<group>"; };
 		05F067622071881100FC3385 /* spritesheet_wood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spritesheet_wood.png; sourceTree = "<group>"; };
 		05F067642071881400FC3385 /* sheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sheet.png; sourceTree = "<group>"; };
-		05F067662071886F00FC3385 /* SatCollision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SatCollision.cpp; path = ../../../code/sat_collision/SatCollision.cpp; sourceTree = "<group>"; };
-		05F067682071887400FC3385 /* SatCollision.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SatCollision.h; path = ../../../code/sat_collision/SatCollision.h; sourceTree = "<group>"; };
+		05F06769207317C500FC3385 /* SatCollision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SatCollision.cpp; sourceTree = "<group>"; };
+		05F0676B207317CA00FC3385 /* SatCollision.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SatCollision.h; sourceTree = "<group>"; };
+		05F0676C2073197700FC3385 /* Vector3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector3.h; sourceTree = "<group>"; };
+		05F0676D207319D200FC3385 /* Vector3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector3.cpp; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -165,11 +168,13 @@
 				05F0675E2071880A00FC3385 /* alienPink.png */,
 				05F067642071881400FC3385 /* sheet.png */,
 				6DEF23BF1B96CC2600BCE792 /* ShaderProgram.h */,
-				05F067662071886F00FC3385 /* SatCollision.cpp */,
+				05F06769207317C500FC3385 /* SatCollision.cpp */,
 				05F067622071881100FC3385 /* spritesheet_wood.png */,
-				05F067682071887400FC3385 /* SatCollision.h */,
+				05F0676B207317CA00FC3385 /* SatCollision.h */,
 				6DEF23C01B96CC2600BCE792 /* vertex.glsl */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
+				05F0676C2073197700FC3385 /* Vector3.h */,
+				05F0676D207319D200FC3385 /* Vector3.cpp */,
 			);
 			name = Code;
 			sourceTree = "<group>";
@@ -248,8 +253,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05F0676A207317C500FC3385 /* SatCollision.cpp in Sources */,
+				05F0676E207319D200FC3385 /* Vector3.cpp in Sources */,
 				6DEF23C31B96CC2600BCE792 /* ShaderProgram.cpp in Sources */,
-				05F067672071886F00FC3385 /* SatCollision.cpp in Sources */,
 				6DEF23C21B96CC2600BCE792 /* Matrix.cpp in Sources */,
 				6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */,
 			);
