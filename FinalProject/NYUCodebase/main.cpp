@@ -25,6 +25,10 @@
 
 SDL_Window* displayWindow;
 
+GLuint SPRITE_COUNT_X = 16;
+GLuint SPRITE_COUNT_Y = 8;
+float TILE_SIZE = 1/8.0;
+
 enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_GAME_OVER, STATE_WIN};
 
 GLuint LoadTexture(const char* filepath){
@@ -270,21 +274,13 @@ void renderMap(ShaderProgram* program, FlareMap* map){
     
     glUseProgram(program->programID);
     
-    program->SetProjectionMatrix(projectionMatrix);
-    program->SetModelMatrix(modelMatrix);
-    program->SetViewMatrix(viewMatrix);
-    
     
     program->SetModelMatrix(modelMatrix);
-    program->SetViewMatrix(viewMatrix);
+//    program->SetViewMatrix(viewMatrix);
     program->SetProjectionMatrix(projectionMatrix);
     
     std::vector<float> vertexData;
     std::vector<float> texCoordData;
-    
-    GLuint SPRITE_COUNT_X = 128;
-    GLuint SPRITE_COUNT_Y = 32;
-    float TILE_SIZE = 1/16.0;
     
     for(int y=0; y < map->mapHeight; y++) {
         for(int x=0; x < map->mapWidth; x++) {
@@ -301,6 +297,8 @@ void renderMap(ShaderProgram* program, FlareMap* map){
 //                spriteHeight = 0.0f;
 //            }
             
+            
+
             vertexData.insert(vertexData.end(), {
                 TILE_SIZE * x, -TILE_SIZE * y,
                 TILE_SIZE * x, (-TILE_SIZE * y) - TILE_SIZE,
@@ -333,7 +331,7 @@ void renderMap(ShaderProgram* program, FlareMap* map){
     
     
     glBindTexture(GL_TEXTURE_2D, map->textureID);
-    glDrawArrays(GL_TRIANGLES, 0, SPRITE_COUNT_X*SPRITE_COUNT_Y*6);
+    glDrawArrays(GL_TRIANGLES, 0, vertexData.size()/2);
     
     
     glDisableVertexAttribArray(program->positionAttribute);
@@ -342,23 +340,20 @@ void renderMap(ShaderProgram* program, FlareMap* map){
     
 }
 
-void placeEntity(std::string type, float x, float y){
+void placeEntity(std::string type, float x, float y, gameState* state){
     if(type == "Player"){
-        
+        state->player.position.x = x * TILE_SIZE;
+        state->player.position.y = y * -TILE_SIZE;
     }
 }
 
 void renderGame(ShaderProgram* program, gameState* gameState, FlareMap* map){
-    
     glClear(GL_COLOR_BUFFER_BIT);
     
-//    gameState->player.Render(program, &gameState->player);
-    
-//    Matrix modelMatrix;
-//    modelMatrix.Identity();
-//    program->SetModelMatrix(modelMatrix);
-    
     renderMap(program, map);
+    
+    gameState->player.Render(program, &gameState->player);
+
     SDL_GL_SwapWindow(displayWindow);
 }
 
@@ -383,6 +378,7 @@ int main(int argc, char *argv[]){
     gameState.player.sprite = SheetSprite(spaceSpriteSheet, 247.0f/1024.0f, 84.0f/1024.0f, 99.0f/1024.0f, 75.0f/1024.0f, 0.2);
     gameState.player = Entity(gameState.player.sprite, 0.05, 0.05f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, -2.0f, ENTITY_PLAYER);
     
+    placeEntity("Player", 6.0f, 24.0f, &gameState);
     
     FlareMap map;
     map.textureID = mapTexture;
