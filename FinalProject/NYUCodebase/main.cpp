@@ -26,6 +26,8 @@ SDL_Window* displayWindow;
 
 enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_GAME_OVER, STATE_WIN};
 
+bool gameOver = false;
+
 
 
 
@@ -465,6 +467,7 @@ public:
         }else{
             if(entity->entityType == ENTITY_COIN){
                 entity->position.x = -2000.0f;
+                gameOver = true;
             }else if(entity->entityType == ENTITY_STATIC){
                 double Xpenetration = 0.0f;
                 
@@ -493,6 +496,7 @@ public:
         }else{
             if(entity->entityType == ENTITY_COIN){
                 entity->position.x = -2000.0f;
+                gameOver = true;
             }else if(entity->entityType == ENTITY_STATIC){
                 double Ypenetration = 0.0f;
                 
@@ -511,10 +515,6 @@ public:
                 velocity.y = 0.0f;
                 
             }else if(entity->entityType == ENTITY_ENEMY_SNAIL){
-                double Ypenetration = 0.0f;
-                
-                Ypenetration = fabs(fabs(position.y-entity->position.y) - size.y*0.5 - entity->size.y*0.5);
-                
                 if(position.y>entity->position.y){
                     collideBottom = true;
                     entity->collideTop = true;
@@ -599,12 +599,14 @@ void drawBackground(ShaderProgram* program, GLuint textureID){
 class mainMenuState{
 public:
     mainMenuState():
-    font1(SheetSprite(), -1.08-1.5f+0.3f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
-    font2(SheetSprite(), -1.08-1.5f+2.0f+0.1f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
-    font3(SheetSprite(), -1.08-1.5f+4.0f-0.05f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
-    board1(-2.1f, 0.0f, 1.3f, 0.5f),
-    board2(-2.1f+1.8f, 0.0f, 1.3f, 0.5f),
-    board3(-2.1f+3.7f, 0.0f, 1.3f, 0.5f){
+    font1(SheetSprite(), -2.08, 0.3f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
+    font2(SheetSprite(), -0.28f, 0.3f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
+    font3(SheetSprite(), 1.57f, 0.3f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
+    font4(SheetSprite(), -0.8f,-0.8f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
+    board1(-1.9f, 0.3f, 1.3f, 0.5f),
+    board2(-0.1f, 0.3f, 1.3f, 0.5f),
+    board3(1.8f, 0.3f, 1.3f, 0.5f),
+    board4(-0.1f, -0.8f, 1.8f, 0.5f){
         fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
         mainBGTexture = LoadTexture(RESOURCE_FOLDER"mainBG.png");
         font1.size.x = 0.2f;
@@ -613,9 +615,10 @@ public:
         font2.size.y = 0.2f;
         font3.size.x = 0.2f;
         font3.size.y = 0.2f;
+        font4.size.x = 0.2f;
+        font4.size.y = 0.2f;
         
     };
-    
     
     
     GLuint fontTexture;
@@ -624,14 +627,18 @@ public:
     Entity font1;
     Entity font2;
     Entity font3;
+    Entity font4;
     Entity_untextured board1;
     Entity_untextured board2;
     Entity_untextured board3;
+    Entity_untextured board4;
 };
 
 class gameState{
 public:
     gameState():
+    font1(SheetSprite(), -1.08-1.5f+0.3f+0.2f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
+    font2(SheetSprite(), -1.08-1.5f+2.0f+0.1f+0.2f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
     player(playerSheet, -3.35f, -1.0f, 1.0f, 1.5f, 0.0f, 0.0f, 0.0f, -2.0f, ENTITY_PLAYER),
     coin(itemSheet, 2.5f, 1.5f, 1.5f, 1.5f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_COIN),
     snail01(playerSheet, -1.5f, -1.5f+1.8*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
@@ -663,6 +670,11 @@ public:
         snail03.snailShell = snailShell;
         snail03.snailNum = 3;
         
+        font1.size.x = 0.2f;
+        font1.size.y = 0.2f;
+        font2.size.x = 0.2f;
+        font2.size.y = 0.2f;
+        
         
         float posX = -1.5f;
         float posY = -1.8f;
@@ -677,7 +689,7 @@ public:
         }
     };
     
-
+    GLuint fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
     GLuint alienTexture = LoadTexture(RESOURCE_FOLDER"alienGreen.png");
     GLuint spaceSpriteSheet = LoadTexture(RESOURCE_FOLDER"spaceSpriteSheet.png");
     GLuint itemSpriteSheet = LoadTexture(RESOURCE_FOLDER"itemSpriteSheet.png");
@@ -714,6 +726,8 @@ public:
     Entity snail01;
     Entity snail02;
     Entity snail03;
+    Entity font1;
+    Entity font2;
 };
 
 void setup(ShaderProgram* program, ShaderProgram* program_untextured){
@@ -772,7 +786,6 @@ void processGameInputLevel3(SDL_Event* event, bool& done, gameState* gameState){
 }
 
 void ProcessMainMenuInput(SDL_Event* event, bool& done, mainMenuState* menuState, GameMode& gameMode){
-    std::cout << "PLEASE LEFT CLICK TO START THE GAME" << std::endl;
     while (SDL_PollEvent(event)) {
         if (event->type == SDL_QUIT || event->type == SDL_WINDOWEVENT_CLOSE) {
             done = true;
@@ -813,54 +826,34 @@ void ProcessMainMenuInput(SDL_Event* event, bool& done, mainMenuState* menuState
                     gameMode = STATE_GAME_LEVEL_3;
                 }
                 
+                float board4PosX = menuState->board4.position.x * 0.5;
+                float board4PosY = menuState->board4.position.y * 0.5;
+                float board4SizeX = menuState->board4.size.x * 0.5;
+                float board4SizeY = menuState->board4.size.y * 0.5;
+                
+                if(unitX>=board4PosX-board4SizeX/2 && unitX<=board4PosX+board4SizeX/2
+                   && unitY>=board4PosY-board4SizeY/2 && unitY<=board4PosY+board4SizeY/2){
+                    done = true;
+                }
+                
             }
         }
     }
 }
 
-void RenderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
-    
-//    glClearColor(209.0f/255.0f, 244.0f/255.0f, 248.0f/255.0f, 1.0f);
-
-    drawBackground(program, menuState->mainBGTexture);
-    
-    Matrix projectionMatrix;
-    Matrix modelMatrix;
-    projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-    modelMatrix.Translate(menuState->font1.position.x, menuState->font1.position.y, menuState->font1.position.z);
-    Matrix viewMatrix;
-    
-    program->SetProjectionMatrix(projectionMatrix);
-    program->SetModelMatrix(modelMatrix);
-    program->SetViewMatrix(viewMatrix);
-
-    menuState->board1.Draw(program_untextured);
-    menuState->board2.Draw(program_untextured);
-    menuState->board3.Draw(program_untextured);
-
-    
-    DrawText(program, menuState->fontTexture, "EASY", menuState->font1.size.x, -menuState->font1.size.x/2.5);
-    modelMatrix.Identity();
-    modelMatrix.Translate(menuState->font2.position.x, menuState->font2.position.y, menuState->font2.position.z);
-    program->SetModelMatrix(modelMatrix);
-    
-    DrawText(program, menuState->fontTexture, "HARD", menuState->font2.size.x, -menuState->font2.size.x/2.5);
-    modelMatrix.Identity();
-    modelMatrix.Translate(menuState->font3.position.x, menuState->font3.position.y, menuState->font3.position.z);
-    program->SetModelMatrix(modelMatrix);
-    DrawText(program, menuState->fontTexture, "HELL?", menuState->font3.size.x, -menuState->font3.size.x/2.5);
-
-
-}
-
 void UpdateMainMenu(){}
 
 void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if(keys[SDL_SCANCODE_ESCAPE]){
+        *mode = STATE_MAIN_MENU;
+    }
+
     gameState->player.collideBottom = false;
     gameState->player.collideTop = false;
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
-
     
     gameState->player.UpdateY(elapsed);
     gameState->snail01.UpdateY(elapsed);
@@ -891,17 +884,18 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
 }
 
 void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
+    
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if(keys[SDL_SCANCODE_ESCAPE]){
+        *mode = STATE_MAIN_MENU;
+    }
+    
     gameState->player.collideBottom = false;
     gameState->player.collideTop = false;
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    
-    //    const Uint8 *keys = SDL_GetKeyboardState(NULL);
-    
-    //    if(keys[SDL_SCANCODE_ESCAPE]){
-    //        *mode = STATE_MAIN_MENU;
-    //    }
     
     gameState->player.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
@@ -919,17 +913,17 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
 }
 
 void updateGameLevel3(float elapsed, gameState* gameState, GameMode* mode){
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if(keys[SDL_SCANCODE_ESCAPE]){
+        *mode = STATE_MAIN_MENU;
+    }
+
     gameState->player.collideBottom = false;
     gameState->player.collideTop = false;
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    
-    //    const Uint8 *keys = SDL_GetKeyboardState(NULL);
-    
-    //    if(keys[SDL_SCANCODE_ESCAPE]){
-    //        *mode = STATE_MAIN_MENU;
-    //    }
     
     gameState->player.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
@@ -943,6 +937,47 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode* mode){
         gameState->player.CollidesWithX(woodPtr);
     }
     gameState->player.CollidesWithX(&gameState->coin);
+    
+}
+
+void RenderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
+    
+    //    glClearColor(209.0f/255.0f, 244.0f/255.0f, 248.0f/255.0f, 1.0f);
+    
+    drawBackground(program, menuState->mainBGTexture);
+    
+    Matrix projectionMatrix;
+    Matrix modelMatrix;
+    projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+    modelMatrix.Translate(menuState->font1.position.x, menuState->font1.position.y, menuState->font1.position.z);
+    Matrix viewMatrix;
+    
+    program->SetProjectionMatrix(projectionMatrix);
+    program->SetModelMatrix(modelMatrix);
+    program->SetViewMatrix(viewMatrix);
+    
+    menuState->board1.Draw(program_untextured);
+    menuState->board2.Draw(program_untextured);
+    menuState->board3.Draw(program_untextured);
+    menuState->board4.Draw(program_untextured);
+    
+    
+    DrawText(program, menuState->fontTexture, "EASY", menuState->font1.size.x, -menuState->font1.size.x/2.5);
+    modelMatrix.Identity();
+    modelMatrix.Translate(menuState->font2.position.x, menuState->font2.position.y, menuState->font2.position.z);
+    program->SetModelMatrix(modelMatrix);
+    
+    DrawText(program, menuState->fontTexture, "HARD", menuState->font2.size.x, -menuState->font2.size.x/2.5);
+    modelMatrix.Identity();
+    modelMatrix.Translate(menuState->font3.position.x, menuState->font3.position.y, menuState->font3.position.z);
+    program->SetModelMatrix(modelMatrix);
+    DrawText(program, menuState->fontTexture, "HELL?", menuState->font3.size.x, -menuState->font3.size.x/2.5);
+    
+    modelMatrix.Identity();
+    modelMatrix.Translate(menuState->font4.position.x, menuState->font4.position.y, menuState->font4.position.z);
+    program->SetModelMatrix(modelMatrix);
+    DrawText(program, menuState->fontTexture, "DON'T EXIT...", menuState->font4.size.x, -menuState->font4.size.x/2.5);
+    
     
 }
 
@@ -960,6 +995,25 @@ void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapse
    
     
     gameState->coin.Render(program, &gameState->player, elapsed);
+    
+    if(gameOver){
+        Matrix projectionMatrix;
+        Matrix modelMatrix;
+        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+        modelMatrix.Translate(gameState->font1.position.x, gameState->font1.position.y, gameState->font1.position.z);
+        Matrix viewMatrix;
+        
+        program->SetProjectionMatrix(projectionMatrix);
+        program->SetModelMatrix(modelMatrix);
+        program->SetViewMatrix(viewMatrix);
+        
+        DrawText(program, gameState->fontTexture, "YOU'VE WON!!!", gameState->font1.size.x, -gameState->font1.size.x/2.5);
+        modelMatrix.Identity();
+        modelMatrix.Translate(gameState->font2.position.x, gameState->font2.position.y, gameState->font2.position.z);
+        program->SetModelMatrix(modelMatrix);
+        
+        DrawText(program, gameState->fontTexture, "PRESE ESC TO RETURN", gameState->font2.size.x, -gameState->font2.size.x/2.5);
+    }
 }
 
 void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapsed){
@@ -1015,6 +1069,7 @@ int main(int argc, char *argv[])
             continue; }
         
         if(mode == STATE_MAIN_MENU){
+            gameOver = false;
             ProcessMainMenuInput(&event, done, &menuState, mode);
         }else if(mode == STATE_GAME_LEVEL_1){
             processGameInputLevel1(&event, done, &gameState);
@@ -1036,6 +1091,7 @@ int main(int argc, char *argv[])
             }else if(mode == STATE_GAME_LEVEL_3){
                 updateGameLevel3(FIXED_TIMESTEP, &gameState, &mode);
             }
+            
             elapsed -= FIXED_TIMESTEP;
         }
         

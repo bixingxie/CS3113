@@ -209,6 +209,7 @@
 				0518F17020795C8F0049558A /* FlareMap.cpp */,
 				6DEF23C01B96CC2600BCE792 /* vertex.glsl */,
 				0518F16F20795C8A0049558A /* FlareMap.h */,
+				6D5A86B919AE5C710066C1FD /* main.cpp */,
 				0518F189208EF0B30049558A /* woodSpriteSheet.png */,
 				0518F19120900A000049558A /* p1_front.png */,
 				0518F19F209196470049558A /* p1_walk.png */,
@@ -234,7 +235,6 @@
 				0518F1B72091AAE20049558A /* mainBG.png */,
 				0518F19D2090437A0049558A /* bg_castle.png */,
 				0518F18B208EF0CA0049558A /* itemSpriteSheet.png */,
-				6D5A86B919AE5C710066C1FD /* main.cpp */,
 				0518F17420795EEE0049558A /* spaceSpriteSheet.png */,
 			);
 			name = Code;
