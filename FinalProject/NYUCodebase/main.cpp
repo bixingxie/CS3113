@@ -106,8 +106,6 @@ public:
         glDisableVertexAttribArray(program->texCoordAttribute);
     }
     
-    
-    
     unsigned int textureID;
     float u;
     float v;
@@ -558,10 +556,10 @@ public:
     GLuint snailWalk02;
     GLuint snailShell;
     
-    bool collideTop;
-    bool collideBottom;
-    bool collideLeft;
-    bool collideRight;
+    bool collideTop=false;
+    bool collideBottom=false;
+    bool collideLeft=false;
+    bool collideRight=false;
     
     bool invertX = false;
     GLuint snailNum;
@@ -606,7 +604,7 @@ public:
     board1(-1.9f, 0.3f, 1.3f, 0.5f),
     board2(-0.1f, 0.3f, 1.3f, 0.5f),
     board3(1.8f, 0.3f, 1.3f, 0.5f),
-    board4(-0.1f, -0.8f, 1.8f, 0.5f){
+    board4(-0.1f, -0.8f, 1.7f, 0.55f){
         fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
         mainBGTexture = LoadTexture(RESOURCE_FOLDER"mainBG.png");
         font1.size.x = 0.2f;
@@ -835,6 +833,7 @@ void ProcessMainMenuInput(SDL_Event* event, bool& done, mainMenuState* menuState
                    && unitY>=board4PosY-board4SizeY/2 && unitY<=board4PosY+board4SizeY/2){
                     done = true;
                 }
+                
                 
             }
         }

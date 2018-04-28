@@ -199,15 +199,15 @@
 		6D5A86E119AE5CAA0066C1FD /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				6DEF23C01B96CC2600BCE792 /* vertex.glsl */,
 				6DEF23BB1B96CC2600BCE792 /* fragment.glsl */,
-				6DE9D2F01BA6AB8C002D599C /* fragment_textured.glsl */,
 				6DC707691BA7273500225B7D /* vertex_textured.glsl */,
+				6DE9D2F01BA6AB8C002D599C /* fragment_textured.glsl */,
 				6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */,
 				6DEF23BD1B96CC2600BCE792 /* Matrix.h */,
 				6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */,
 				6DEF23BF1B96CC2600BCE792 /* ShaderProgram.h */,
 				0518F17020795C8F0049558A /* FlareMap.cpp */,
-				6DEF23C01B96CC2600BCE792 /* vertex.glsl */,
 				0518F16F20795C8A0049558A /* FlareMap.h */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
 				0518F189208EF0B30049558A /* woodSpriteSheet.png */,
