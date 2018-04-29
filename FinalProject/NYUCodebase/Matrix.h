@@ -1,6 +1,8 @@
 
 #pragma once
 
+class Vector3;
+
 class Matrix {
     public:
     
@@ -13,6 +15,7 @@ class Matrix {
     
         void Identity();
         Matrix operator * (const Matrix &m2) const;
+        Vector3 operator*(const Vector3& v);
         Matrix Inverse() const;
     
         void Translate(float x, float y, float z);

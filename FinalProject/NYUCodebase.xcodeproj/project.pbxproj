@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0518F17120795C8F0049558A /* FlareMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F17020795C8F0049558A /* FlareMap.cpp */; };
 		0518F17520795EEE0049558A /* spaceSpriteSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F17420795EEE0049558A /* spaceSpriteSheet.png */; };
 		0518F18A208EF0B30049558A /* woodSpriteSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F189208EF0B30049558A /* woodSpriteSheet.png */; };
 		0518F18C208EF0CA0049558A /* itemSpriteSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F18B208EF0CA0049558A /* itemSpriteSheet.png */; };
@@ -34,6 +33,7 @@
 		0518F1C220926C970049558A /* snailWalk1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1C120926C970049558A /* snailWalk1.png */; };
 		0518F1C420926E810049558A /* snailWalk2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1C320926E810049558A /* snailWalk2.png */; };
 		0518F1C620927BFA0049558A /* snailShell.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1C520927BF90049558A /* snailShell.png */; };
+		0518F1C9209595A10049558A /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1C7209595A10049558A /* Vector3.cpp */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -51,8 +51,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0518F16F20795C8A0049558A /* FlareMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlareMap.h; sourceTree = "<group>"; };
-		0518F17020795C8F0049558A /* FlareMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FlareMap.cpp; sourceTree = "<group>"; };
 		0518F17420795EEE0049558A /* spaceSpriteSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spaceSpriteSheet.png; sourceTree = "<group>"; };
 		0518F189208EF0B30049558A /* woodSpriteSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = woodSpriteSheet.png; sourceTree = "<group>"; };
 		0518F18B208EF0CA0049558A /* itemSpriteSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = itemSpriteSheet.png; sourceTree = "<group>"; };
@@ -79,6 +77,8 @@
 		0518F1C120926C970049558A /* snailWalk1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = snailWalk1.png; sourceTree = "<group>"; };
 		0518F1C320926E810049558A /* snailWalk2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = snailWalk2.png; sourceTree = "<group>"; };
 		0518F1C520927BF90049558A /* snailShell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = snailShell.png; sourceTree = "<group>"; };
+		0518F1C7209595A10049558A /* Vector3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector3.cpp; sourceTree = "<group>"; };
+		0518F1CA209595D70049558A /* Vector3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector3.h; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -203,12 +203,12 @@
 				6DEF23BB1B96CC2600BCE792 /* fragment.glsl */,
 				6DC707691BA7273500225B7D /* vertex_textured.glsl */,
 				6DE9D2F01BA6AB8C002D599C /* fragment_textured.glsl */,
-				6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */,
 				6DEF23BD1B96CC2600BCE792 /* Matrix.h */,
-				6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */,
+				6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */,
+				0518F1CA209595D70049558A /* Vector3.h */,
+				0518F1C7209595A10049558A /* Vector3.cpp */,
 				6DEF23BF1B96CC2600BCE792 /* ShaderProgram.h */,
-				0518F17020795C8F0049558A /* FlareMap.cpp */,
-				0518F16F20795C8A0049558A /* FlareMap.h */,
+				6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
 				0518F189208EF0B30049558A /* woodSpriteSheet.png */,
 				0518F19120900A000049558A /* p1_front.png */,
@@ -337,7 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DEF23C31B96CC2600BCE792 /* ShaderProgram.cpp in Sources */,
-				0518F17120795C8F0049558A /* FlareMap.cpp in Sources */,
+				0518F1C9209595A10049558A /* Vector3.cpp in Sources */,
 				6DEF23C21B96CC2600BCE792 /* Matrix.cpp in Sources */,
 				6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */,
 			);

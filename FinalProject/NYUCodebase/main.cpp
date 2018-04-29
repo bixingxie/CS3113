@@ -7,6 +7,7 @@
 
 #include <vector>
 #include "Matrix.h"
+#include "Vector3.h"
 #include "ShaderProgram.h"
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -157,15 +158,6 @@ void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, floa
 }
 
 
-class Vector3{
-public:
-    Vector3(float x, float y, float z):x(x), y(y), z(z){};
-    
-    float x;
-    float y;
-    float z;
-};
-
 class Entity_untextured{
 public:
     
@@ -297,7 +289,7 @@ public:
         
         Matrix projectionMatrix;
         projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-        Matrix modelMatrix;
+        modelMatrix.Identity();
         modelMatrix.Translate(position.x, position.y, position.z);
         modelMatrix.Scale(size.x, size.y, size.z);
         
@@ -310,6 +302,7 @@ public:
         program->SetProjectionMatrix(projectionMatrix);
         program->SetModelMatrix(modelMatrix);
         program->SetViewMatrix(viewMatrix);
+    
         
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         
@@ -535,6 +528,8 @@ public:
     Vector3 velocity;
     Vector3 acceleration;
     
+    Matrix modelMatrix;
+    
     //    bool isStatic;
     
     float animationElapsed = 0.0f;
@@ -564,35 +559,6 @@ public:
     bool invertX = false;
     GLuint snailNum;
 };
-
-void drawBackground(ShaderProgram* program, GLuint textureID){
-    Matrix projectionMatrix;
-    Matrix modelMatrix;
-    Matrix viewMatrix;
-    
-    projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-    modelMatrix.Scale(3.55f*2, 2.0f*2, 1.0f);
-    
-    program->SetProjectionMatrix(projectionMatrix);
-    program->SetModelMatrix(modelMatrix);
-    program->SetViewMatrix(viewMatrix);
-    
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    
-    float vertices01[] = {-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5};
-    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices01);
-    glEnableVertexAttribArray(program->positionAttribute);
-    
-    float texCoords01[] = {0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0};
-    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords01);
-    glEnableVertexAttribArray(program->texCoordAttribute);
-    
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    
-    glDisableVertexAttribArray(program->positionAttribute);
-    glDisableVertexAttribArray(program->texCoordAttribute);
-    
-}
 
 class mainMenuState{
 public:
@@ -727,6 +693,50 @@ public:
     Entity font1;
     Entity font2;
 };
+
+void drawBackground(ShaderProgram* program, GLuint textureID, gameState* gameState){
+    Matrix projectionMatrix;
+    Matrix modelMatrix;
+    Matrix viewMatrix;
+    
+    projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+    modelMatrix.Scale(3.55f*2, 2.0f*2, 1.0f);
+    
+    program->SetProjectionMatrix(projectionMatrix);
+    program->SetModelMatrix(modelMatrix);
+    program->SetViewMatrix(viewMatrix);
+    
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    
+    float vertices01[] = {-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5};
+    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices01);
+    glEnableVertexAttribArray(program->positionAttribute);
+    
+    float texCoords01[] = {0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0};
+    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords01);
+    glEnableVertexAttribArray(program->texCoordAttribute);
+    
+    if(gameState){
+        
+        //didn't put viewMatrix because it was identity
+        
+        
+        Matrix projModelMatrix = gameState->player.modelMatrix * projectionMatrix;
+        
+        Vector3 finalPos = projModelMatrix * gameState->player.position;
+        
+        std::cout << "x: " << finalPos.x << " y: " << finalPos.y << " z: " << finalPos.z << std::endl;
+        program->SetPlayerPos(finalPos.x, finalPos.y, finalPos.z);
+    }
+    
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    glDisableVertexAttribArray(program->positionAttribute);
+    glDisableVertexAttribArray(program->texCoordAttribute);
+
+    program->SetPlayerPos(0, 0, 0);
+    
+}
 
 void setup(ShaderProgram* program, ShaderProgram* program_untextured){
     SDL_Init(SDL_INIT_VIDEO);
@@ -943,7 +953,7 @@ void RenderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, m
     
     //    glClearColor(209.0f/255.0f, 244.0f/255.0f, 248.0f/255.0f, 1.0f);
     
-    drawBackground(program, menuState->mainBGTexture);
+    drawBackground(program, menuState->mainBGTexture, NULL);
     
     Matrix projectionMatrix;
     Matrix modelMatrix;
@@ -981,7 +991,7 @@ void RenderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, m
 }
 
 void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapsed){
-    drawBackground(program, gameState->level1BG);
+    drawBackground(program, gameState->level1BG, gameState);
 //    glClearColor(135.0f/255.0f, 149.0f/255.0f, 150.0f/255.0f, 1.0f);
     gameState->player.Render(program, &gameState->player, elapsed);
     for (Entity* woodPtr : gameState->woods){
@@ -1016,7 +1026,7 @@ void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapse
 }
 
 void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapsed){
-    drawBackground(program, gameState->level2BG);
+    drawBackground(program, gameState->level2BG, gameState);
     //    glClearColor(135.0f/255.0f, 149.0f/255.0f, 150.0f/255.0f, 1.0f);
     gameState->player.Render(program, &gameState->player, elapsed);
     for (Entity* woodPtr : gameState->woods){
@@ -1027,7 +1037,7 @@ void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapse
 }
 
 void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapsed){
-    drawBackground(program, gameState->level3BG);
+    drawBackground(program, gameState->level3BG, gameState);
     //    glClearColor(135.0f/255.0f, 149.0f/255.0f, 150.0f/255.0f, 1.0f);
     gameState->player.Render(program, &gameState->player, elapsed);
     for (Entity* woodPtr : gameState->woods){

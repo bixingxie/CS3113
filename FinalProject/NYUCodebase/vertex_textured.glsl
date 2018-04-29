@@ -6,10 +6,13 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 varying vec2 texCoordVar;
+varying vec4 v_position;
 
 void main()
 {
-	vec4 p = viewMatrix * modelMatrix  * position;
+    
+	vec4 p =  projectionMatrix * modelMatrix  * position;
     texCoordVar = texCoord;
-	gl_Position = projectionMatrix * p;
+    v_position = p;
+	gl_Position = viewMatrix *  p;
 }
