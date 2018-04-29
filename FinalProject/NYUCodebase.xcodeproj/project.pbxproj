@@ -34,6 +34,8 @@
 		0518F1C420926E810049558A /* snailWalk2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1C320926E810049558A /* snailWalk2.png */; };
 		0518F1C620927BFA0049558A /* snailShell.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1C520927BF90049558A /* snailShell.png */; };
 		0518F1C9209595A10049558A /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1C7209595A10049558A /* Vector3.cpp */; };
+		0518F1CD209664E20049558A /* SheetSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1CB209664E20049558A /* SheetSprite.cpp */; };
+		0518F1D0209666460049558A /* Entity_untextured.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1CF209666460049558A /* Entity_untextured.cpp */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -79,6 +81,10 @@
 		0518F1C520927BF90049558A /* snailShell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = snailShell.png; sourceTree = "<group>"; };
 		0518F1C7209595A10049558A /* Vector3.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector3.cpp; sourceTree = "<group>"; };
 		0518F1CA209595D70049558A /* Vector3.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector3.h; sourceTree = "<group>"; };
+		0518F1CB209664E20049558A /* SheetSprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SheetSprite.cpp; sourceTree = "<group>"; };
+		0518F1CE209664FA0049558A /* SheetSprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SheetSprite.h; sourceTree = "<group>"; };
+		0518F1CF209666460049558A /* Entity_untextured.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Entity_untextured.cpp; sourceTree = "<group>"; };
+		0518F1D1209666570049558A /* Entity_untextured.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entity_untextured.h; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -210,6 +216,10 @@
 				6DEF23BF1B96CC2600BCE792 /* ShaderProgram.h */,
 				6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */,
 				6D5A86B919AE5C710066C1FD /* main.cpp */,
+				0518F1D1209666570049558A /* Entity_untextured.h */,
+				0518F1CF209666460049558A /* Entity_untextured.cpp */,
+				0518F1CB209664E20049558A /* SheetSprite.cpp */,
+				0518F1CE209664FA0049558A /* SheetSprite.h */,
 				0518F189208EF0B30049558A /* woodSpriteSheet.png */,
 				0518F19120900A000049558A /* p1_front.png */,
 				0518F19F209196470049558A /* p1_walk.png */,
@@ -337,8 +347,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DEF23C31B96CC2600BCE792 /* ShaderProgram.cpp in Sources */,
+				0518F1CD209664E20049558A /* SheetSprite.cpp in Sources */,
 				0518F1C9209595A10049558A /* Vector3.cpp in Sources */,
 				6DEF23C21B96CC2600BCE792 /* Matrix.cpp in Sources */,
+				0518F1D0209666460049558A /* Entity_untextured.cpp in Sources */,
 				6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

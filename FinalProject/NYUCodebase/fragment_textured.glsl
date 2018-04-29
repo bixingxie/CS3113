@@ -24,8 +24,8 @@ void main() {
 //        diffuse =  1.0 - abs(distance / point_light_intensity);
 //
 //    gl_FragColor = vec4(min(frag_color.rgb * ((point_light_col * diffuse)), frag_color.rgb), 1.0);
-//
-//
+
+
 ////    vec4 frag_color = texture2D(diffuse, texCoordVar);
 ////
 ////    float distance = distance(point_light_pos, v_position.xy);
@@ -35,6 +35,6 @@ void main() {
 ////    frag_color.a = lerp(0, 1, 1-distance/8.15f);
 ////
 ////    gl_FragColor = frag_color;
-    
+//
     gl_FragColor = texture2D(diffuse, texCoordVar);
 }

@@ -9,6 +9,8 @@
 #include "Matrix.h"
 #include "Vector3.h"
 #include "ShaderProgram.h"
+#include "SheetSprite.h"
+#include "Entity_untextured.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -23,13 +25,12 @@
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
 
+
+//Globals
 SDL_Window* displayWindow;
-
-enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_GAME_OVER, STATE_WIN};
-
 bool gameOver = false;
-
-
+enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_GAME_OVER, STATE_WIN};
+enum EntityType {ENTITY_PLAYER, ENTITY_ENEMY_SNAIL, ENTITY_COIN, ENTITY_STATIC};
 
 
 GLuint LoadTexture(const char* filepath){
@@ -52,68 +53,6 @@ GLuint LoadTexture(const char* filepath){
     stbi_image_free(image);
     return retTexture;
 }
-
-
-
-class SheetSprite{
-public:
-    SheetSprite(){};
-    SheetSprite(unsigned int textureID, float u, float v, float width, float height, float
-                size):textureID(textureID), u(u), v(v), width(width), height(height), size(size){ }
-    
-    void Draw(ShaderProgram *program) const {
-        
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        
-        GLfloat texCoords[] = {
-            u, v+height,
-            u+width, v,
-            u, v,
-            u+width, v,
-            u, v+height,
-            u+width, v+height
-        };
-        
-        
-        //        float aspect = width / height;
-        //        float vertices[] = {
-        //            -0.5f * size * aspect, -0.5f * size,
-        //            0.5f * size * aspect, 0.5f * size,
-        //            -0.5f * size * aspect, 0.5f * size,
-        //            0.5f * size * aspect, 0.5f * size,
-        //            -0.5f * size * aspect, -0.5f * size ,
-        //            0.5f * size * aspect, -0.5f * size};
-        
-        //        float aspect = width / height;
-        
-        float vertices[] = {
-            -0.5f , -0.5f,
-            0.5f, 0.5f ,
-            -0.5f , 0.5f ,
-            0.5f, 0.5f ,
-            -0.5f, -0.5f  ,
-            0.5f , -0.5f };
-        
-        glUseProgram(program->programID);
-        
-        glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-        glEnableVertexAttribArray(program->positionAttribute);
-        glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-        glEnableVertexAttribArray(program->texCoordAttribute);
-        
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        
-        glDisableVertexAttribArray(program->positionAttribute);
-        glDisableVertexAttribArray(program->texCoordAttribute);
-    }
-    
-    unsigned int textureID;
-    float u;
-    float v;
-    float width;
-    float height;
-    float size;
-};
 
 
 void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size, float spacing) {
@@ -157,45 +96,9 @@ void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, floa
     
 }
 
-
-class Entity_untextured{
-public:
-    
-    Entity_untextured(float positionX, float positionY, float sizeX, float sizeY):position(positionX, positionY, 0.0f), size(sizeX, sizeY,0.0f){};
-    
-    void Draw(ShaderProgram* program){
-        Matrix projectionMatrix;
-        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-        Matrix modelMatrix;
-        
-        modelMatrix.Translate(position.x, position.y, position.z);
-        modelMatrix.Scale(size.x, size.y, size.z);
-        Matrix viewMatrix;
-        
-        program->SetProjectionMatrix(projectionMatrix);
-        program->SetModelMatrix(modelMatrix);
-        program->SetViewMatrix(viewMatrix);
-        glUseProgram(program->programID);
-        program->SetColor(1.0f, 1.0f, 1.0f, 0.4f);
-        
-        float vertices[] = {-0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5};
-        glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-        glEnableVertexAttribArray(program->positionAttribute);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDisableVertexAttribArray(program->positionAttribute);
-    }
-    
-    
-    Vector3 position;
-    Vector3 size;
-};
-
 float lerp(float v0, float v1, float t) {
     return (1.0-t)*v0 + t*v1;
 }
-
-
-enum EntityType {ENTITY_PLAYER, ENTITY_ENEMY_SNAIL, ENTITY_COIN, ENTITY_STATIC};
 
 class Entity{
 public:
@@ -206,16 +109,19 @@ public:
     void UpdateX(float elapsed){
         
         if(entityType == ENTITY_PLAYER){
+            
             const Uint8 *keys = SDL_GetKeyboardState(NULL);
             
-            if(keys[SDL_SCANCODE_RIGHT]){
-                acceleration.x = 2.5f;
-            }else if(keys[SDL_SCANCODE_LEFT]){
-                acceleration.x = -2.5f;
-            }else{
-                acceleration.x = 0.0f;
+            if(gameOver == false){
+                if(keys[SDL_SCANCODE_RIGHT]){
+                    acceleration.x = 2.5f;
+                }else if(keys[SDL_SCANCODE_LEFT]){
+                    acceleration.x = -2.5f;
+                }else{
+                    acceleration.x = 0.0f;
+                }
             }
-            
+                
             velocity.x = lerp(velocity.x, 0.0f, elapsed * 1.5f);
             velocity.x += acceleration.x * elapsed;
             position.x += velocity.x * elapsed;
@@ -225,26 +131,26 @@ public:
                 acceleration.x = 20.0f;
             }else{
                 if(snailNum == 1){
-                    if(position.x >= -1.5+1.8*0.5*0.2){
+                    if(position.x >= -1.5+2.5*0.5*0.2){
                         invertX = false;
                         acceleration.x = -1.0f;
-                    }else if(position.x <= -1.5-1.8*0.5*0.2){
+                    }else if(position.x <= -1.5-2.5*0.5*0.2){
                         invertX = true;
                         acceleration.x = 1.0f;
                     }
                 }else if(snailNum == 2){
-                    if(position.x >= -1.5+0.8+1.8*0.5*0.2){
+                    if(position.x >= -1.5+0.8+2.5*0.5*0.2){
                         invertX = false;
                         acceleration.x = -1.0f;
-                    }else if(position.x <= -1.5+0.8-1.8*0.5*0.2){
+                    }else if(position.x <= -1.5+0.8-2.5*0.5*0.2){
                         invertX = true;
                         acceleration.x = 1.0f;
                     }
                 }else if(snailNum == 3){
-                    if(position.x >= -1.5+2.4+1.8*0.5*0.2){
+                    if(position.x >= -1.5+2.4+2.5*0.5*0.2){
                         invertX = false;
                         acceleration.x = -1.0f;
-                    }else if(position.x <= -1.5+2.4-1.8*0.5*0.2){
+                    }else if(position.x <= -1.5+2.4-2.5*0.5*0.2){
                         invertX = true;
                         acceleration.x = 1.0f;
                     }
@@ -644,7 +550,7 @@ public:
         float posY = -1.8f;
         
         for (size_t i=0; i<5; i++){
-            Entity* newWoodPtr = new Entity(woodSheet, posX, posY, 2.0f, 1.8f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* newWoodPtr = new Entity(woodSheet, posX, posY, 2.5f, 1.8f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             newWoodPtr->blockTextureID = blockTexture;
             newWoodPtr->blockMadTextureID = blockMadTexture;
             woods.push_back(newWoodPtr);
@@ -762,9 +668,12 @@ void processGameInputLevel1(SDL_Event* event, bool& done, gameState* gameState){
         if (event->type == SDL_QUIT || event->type == SDL_WINDOWEVENT_CLOSE) {
             done = true;
         }else if(event->type == SDL_KEYDOWN){
-            if(event->key.keysym.scancode == SDL_SCANCODE_SPACE && gameState->player.collideBottom == true){
-                gameState->player.velocity.y = 2.0f;
+            if(gameOver == false){
+                if(event->key.keysym.scancode == SDL_SCANCODE_SPACE && gameState->player.collideBottom == true){
+                    gameState->player.velocity.y = 2.0f;
+                }
             }
+                
         }
     }
 }
@@ -853,6 +762,7 @@ void ProcessMainMenuInput(SDL_Event* event, bool& done, mainMenuState* menuState
 void UpdateMainMenu(){}
 
 void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
+    
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
     if(keys[SDL_SCANCODE_ESCAPE]){
@@ -894,6 +804,7 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
 
 void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
     
+    
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
     if(keys[SDL_SCANCODE_ESCAPE]){
@@ -905,47 +816,72 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    
     gameState->player.UpdateY(elapsed);
+    gameState->snail01.UpdateY(elapsed);
+    gameState->snail02.UpdateY(elapsed);
+    gameState->snail03.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithY(woodPtr);
     }
     gameState->player.CollidesWithY(&gameState->coin);
+    gameState->player.CollidesWithY(&gameState->snail01);
+    gameState->player.CollidesWithY(&gameState->snail02);
+    gameState->player.CollidesWithY(&gameState->snail03);
     
     
     gameState->player.UpdateX(elapsed);
+    gameState->snail01.UpdateX(elapsed);
+    gameState->snail02.UpdateX(elapsed);
+    gameState->snail03.UpdateX(elapsed);
+    
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithX(woodPtr);
     }
     gameState->player.CollidesWithX(&gameState->coin);
+    gameState->player.CollidesWithX(&gameState->snail01);
+    gameState->player.CollidesWithX(&gameState->snail02);
+    gameState->player.CollidesWithX(&gameState->snail03);
     
 }
 
 void updateGameLevel3(float elapsed, gameState* gameState, GameMode* mode){
+    
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
     if(keys[SDL_SCANCODE_ESCAPE]){
         *mode = STATE_MAIN_MENU;
     }
-
+    
     gameState->player.collideBottom = false;
     gameState->player.collideTop = false;
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    
     gameState->player.UpdateY(elapsed);
+    gameState->snail01.UpdateY(elapsed);
+    gameState->snail02.UpdateY(elapsed);
+    gameState->snail03.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithY(woodPtr);
     }
     gameState->player.CollidesWithY(&gameState->coin);
+    gameState->player.CollidesWithY(&gameState->snail01);
+    gameState->player.CollidesWithY(&gameState->snail02);
+    gameState->player.CollidesWithY(&gameState->snail03);
     
     
     gameState->player.UpdateX(elapsed);
+    gameState->snail01.UpdateX(elapsed);
+    gameState->snail02.UpdateX(elapsed);
+    gameState->snail03.UpdateX(elapsed);
+    
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithX(woodPtr);
     }
     gameState->player.CollidesWithX(&gameState->coin);
+    gameState->player.CollidesWithX(&gameState->snail01);
+    gameState->player.CollidesWithX(&gameState->snail02);
+    gameState->player.CollidesWithX(&gameState->snail03);
     
 }
 
@@ -1033,7 +969,30 @@ void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapse
         woodPtr->Render(program, &gameState->player, elapsed);
     }
     
+    gameState->snail01.Render(program, &gameState->player, elapsed);
+    gameState->snail02.Render(program, &gameState->player, elapsed);
+    gameState->snail03.Render(program, &gameState->player, elapsed);
+    
     gameState->coin.Render(program, &gameState->player, elapsed);
+    
+    if(gameOver){
+        Matrix projectionMatrix;
+        Matrix modelMatrix;
+        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+        modelMatrix.Translate(gameState->font1.position.x, gameState->font1.position.y, gameState->font1.position.z);
+        Matrix viewMatrix;
+        
+        program->SetProjectionMatrix(projectionMatrix);
+        program->SetModelMatrix(modelMatrix);
+        program->SetViewMatrix(viewMatrix);
+        
+        DrawText(program, gameState->fontTexture, "YOU'VE WON!!!", gameState->font1.size.x, -gameState->font1.size.x/2.5);
+        modelMatrix.Identity();
+        modelMatrix.Translate(gameState->font2.position.x, gameState->font2.position.y, gameState->font2.position.z);
+        program->SetModelMatrix(modelMatrix);
+        
+        DrawText(program, gameState->fontTexture, "PRESE ESC TO RETURN", gameState->font2.size.x, -gameState->font2.size.x/2.5);
+    }
 }
 
 void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapsed){
@@ -1044,7 +1003,30 @@ void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapse
         woodPtr->Render(program, &gameState->player, elapsed);
     }
     
+    gameState->snail01.Render(program, &gameState->player, elapsed);
+    gameState->snail02.Render(program, &gameState->player, elapsed);
+    gameState->snail03.Render(program, &gameState->player, elapsed);
+    
     gameState->coin.Render(program, &gameState->player, elapsed);
+    
+    if(gameOver){
+        Matrix projectionMatrix;
+        Matrix modelMatrix;
+        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+        modelMatrix.Translate(gameState->font1.position.x, gameState->font1.position.y, gameState->font1.position.z);
+        Matrix viewMatrix;
+        
+        program->SetProjectionMatrix(projectionMatrix);
+        program->SetModelMatrix(modelMatrix);
+        program->SetViewMatrix(viewMatrix);
+        
+        DrawText(program, gameState->fontTexture, "YOU'VE WON!!!", gameState->font1.size.x, -gameState->font1.size.x/2.5);
+        modelMatrix.Identity();
+        modelMatrix.Translate(gameState->font2.position.x, gameState->font2.position.y, gameState->font2.position.z);
+        program->SetModelMatrix(modelMatrix);
+        
+        DrawText(program, gameState->fontTexture, "PRESE ESC TO RETURN", gameState->font2.size.x, -gameState->font2.size.x/2.5);
+    }
 }
 
 void cleanup(){
@@ -1062,7 +1044,9 @@ int main(int argc, char *argv[])
     
 
     mainMenuState menuState;
-    gameState gameState;
+    gameState gameState1;
+    gameState gameState2;
+    gameState gameState3;
     GameMode mode = STATE_MAIN_MENU;
     
     SDL_Event event;
@@ -1081,11 +1065,11 @@ int main(int argc, char *argv[])
             gameOver = false;
             ProcessMainMenuInput(&event, done, &menuState, mode);
         }else if(mode == STATE_GAME_LEVEL_1){
-            processGameInputLevel1(&event, done, &gameState);
+            processGameInputLevel1(&event, done, &gameState1);
         }else if(mode == STATE_GAME_LEVEL_2){
-            processGameInputLevel2(&event, done, &gameState);
+            processGameInputLevel2(&event, done, &gameState2);
         }else if(mode == STATE_GAME_LEVEL_3){
-            processGameInputLevel3(&event, done, &gameState);
+            processGameInputLevel3(&event, done, &gameState3);
         }
         
         glClear(GL_COLOR_BUFFER_BIT);
@@ -1094,11 +1078,11 @@ int main(int argc, char *argv[])
             if(mode == STATE_MAIN_MENU){
                 UpdateMainMenu();
             }else if(mode == STATE_GAME_LEVEL_1){
-                updateGameLevel1(FIXED_TIMESTEP, &gameState, &mode);
+                updateGameLevel1(FIXED_TIMESTEP, &gameState1, &mode);
             }else if(mode == STATE_GAME_LEVEL_2){
-                updateGameLevel2(FIXED_TIMESTEP, &gameState, &mode);
+                updateGameLevel2(FIXED_TIMESTEP, &gameState2, &mode);
             }else if(mode == STATE_GAME_LEVEL_3){
-                updateGameLevel3(FIXED_TIMESTEP, &gameState, &mode);
+                updateGameLevel3(FIXED_TIMESTEP, &gameState3, &mode);
             }
             
             elapsed -= FIXED_TIMESTEP;
@@ -1108,11 +1092,11 @@ int main(int argc, char *argv[])
         if(mode == STATE_MAIN_MENU){
             RenderMainMenu(&program, &program_untextured, &menuState);
         }else if(mode == STATE_GAME_LEVEL_1){
-            renderGameLevel1(&program, &gameState, FIXED_TIMESTEP);
+            renderGameLevel1(&program, &gameState1, FIXED_TIMESTEP);
         }else if(mode == STATE_GAME_LEVEL_2){
-            renderGameLevel2(&program, &gameState, FIXED_TIMESTEP);
+            renderGameLevel2(&program, &gameState2, FIXED_TIMESTEP);
         }else if(mode == STATE_GAME_LEVEL_3){
-            renderGameLevel3(&program, &gameState, FIXED_TIMESTEP);
+            renderGameLevel3(&program, &gameState3, FIXED_TIMESTEP);
         }
         
         SDL_GL_SwapWindow(displayWindow);
