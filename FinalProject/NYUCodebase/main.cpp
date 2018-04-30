@@ -154,6 +154,22 @@ public:
                         invertX = true;
                         acceleration.x = 1.0f;
                     }
+                }else if(snailNum == 4){
+                    if(position.x >= -1.0+2.5*0.5*0.2){
+                        invertX = false;
+                        acceleration.x = -1.0f;
+                    }else if(position.x <= -1.0-2.5*0.5*0.2){
+                        invertX = true;
+                        acceleration.x = 1.0f;
+                    }
+                }else if(snailNum == 5){
+                    if(position.x >= 3.55-1.0*0.5*0.2){
+                        invertX = false;
+                        acceleration.x = -2.0f;
+                    }else if(position.x <= -3.55+1.0*0.5*0.2){
+                        invertX = true;
+                        acceleration.x = 2.0f;
+                    }
                 }
             }
             
@@ -189,6 +205,12 @@ public:
             }
         }
     }
+    
+    
+//    void reset(){
+//        Vector3 origPos = modelMatrix.Inverse() * position;
+//        position = origPos;
+//    };
     
     
     void Render(ShaderProgram* program, Entity* player, float elapsed){
@@ -506,14 +528,16 @@ public:
 
 class gameState{
 public:
-    gameState():
+    gameState(GLuint StateNum):
     font1(SheetSprite(), -1.08-1.5f+0.3f+0.2f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
     font2(SheetSprite(), -1.08-1.5f+2.0f+0.1f+0.2f, 0.0f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
     player(playerSheet, -3.35f, -1.0f, 1.0f, 1.5f, 0.0f, 0.0f, 0.0f, -2.0f, ENTITY_PLAYER),
     coin(itemSheet, 2.5f, 1.5f, 1.5f, 1.5f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_COIN),
-    snail01(playerSheet, -1.5f, -1.5f+1.8*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
-    snail02(playerSheet, -1.5f+0.9f, -1.5f+0.7f+1.8*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
-    snail03(playerSheet, -1.5f+2.3f, -1.5f+2.1f+1.8*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL)
+    snail01(playerSheet, -1.5f, -1.5f+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
+    snail02(playerSheet, -1.5f+0.9f, -1.5f+0.7f+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
+    snail03(playerSheet, -1.5f+2.3f, -1.5f+2.1f+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
+    snail04(playerSheet, -1.0f, -1.0+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
+    snail05(playerSheet, -2.0f, -2.0+1.0/1.5*0.5*0.2, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -2.0f, -2.0f, ENTITY_ENEMY_SNAIL)
     {
         
         player.frontTextureID = p1_front;
@@ -540,24 +564,57 @@ public:
         snail03.snailShell = snailShell;
         snail03.snailNum = 3;
         
+        snail04.snailWalk01 = snailWalk01;
+        snail04.snailWalk02 = snailWalk02;
+        snail04.snailShell = snailShell;
+        snail04.snailNum = 4;
+        
+        snail05.snailWalk01 = snailWalk01;
+        snail05.snailWalk02 = snailWalk02;
+        snail05.snailShell = snailShell;
+        snail05.snailNum = 5;
+        
         font1.size.x = 0.2f;
         font1.size.y = 0.2f;
         font2.size.x = 0.2f;
         font2.size.y = 0.2f;
         
         
-        float posX = -1.5f;
-        float posY = -1.8f;
-        
-        for (size_t i=0; i<5; i++){
-            Entity* newWoodPtr = new Entity(woodSheet, posX, posY, 2.5f, 1.8f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
-            newWoodPtr->blockTextureID = blockTexture;
-            newWoodPtr->blockMadTextureID = blockMadTexture;
-            woods.push_back(newWoodPtr);
-            posX += 0.8f;
-            posY += 0.7f;
+        if(StateNum == 1){
+            float posX = -1.5f;
+            float posY = -1.8f;
+            
+            for (size_t i=0; i<5; i++){
+                Entity* newWoodPtr = new Entity(woodSheet, posX, posY, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+                newWoodPtr->blockTextureID = blockTexture;
+                newWoodPtr->blockMadTextureID = blockMadTexture;
+                woods.push_back(newWoodPtr);
+                posX += 0.8f;
+                posY += 0.7f;
+            }
+        }else if(StateNum == 2){
+            
+            coin.position.x = -1.3f;
+            coin.position.y = 0.25f;
+            
+            Entity* wood1 = new Entity(woodSheet, -1.0f, -1.3f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood1);
+            Entity* wood2 = new Entity(woodSheet, 1.1f, -0.32f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood2);
+            Entity* wood3 = new Entity(woodSheet, -1.0f, 1.0f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood3);
+            
+            for(Entity* woodPtr:woods){
+                woodPtr->blockTextureID = blockTexture;
+                woodPtr->blockMadTextureID = blockMadTexture;
+            }
+            
         }
     };
+    
+//    void resetGameState(){
+//        player.reset();
+//    }
     
     GLuint fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
     GLuint alienTexture = LoadTexture(RESOURCE_FOLDER"alienGreen.png");
@@ -596,6 +653,8 @@ public:
     Entity snail01;
     Entity snail02;
     Entity snail03;
+    Entity snail04;
+    Entity snail05;
     Entity font1;
     Entity font2;
 };
@@ -817,9 +876,8 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
     gameState->player.collideLeft = false;
     
     gameState->player.UpdateY(elapsed);
-    gameState->snail01.UpdateY(elapsed);
-    gameState->snail02.UpdateY(elapsed);
-    gameState->snail03.UpdateY(elapsed);
+    gameState->snail04.UpdateY(elapsed);
+    gameState->snail05.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithY(woodPtr);
     }
@@ -828,12 +886,12 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
     gameState->player.CollidesWithY(&gameState->snail02);
     gameState->player.CollidesWithY(&gameState->snail03);
     
-    
-    gameState->player.UpdateX(elapsed);
-    gameState->snail01.UpdateX(elapsed);
-    gameState->snail02.UpdateX(elapsed);
-    gameState->snail03.UpdateX(elapsed);
-    
+    if(gameOver == false){
+        gameState->player.UpdateX(elapsed);
+    }
+    gameState->snail04.UpdateX(elapsed);
+    gameState->snail05.UpdateX(elapsed);
+
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithX(woodPtr);
     }
@@ -969,9 +1027,12 @@ void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapse
         woodPtr->Render(program, &gameState->player, elapsed);
     }
     
-    gameState->snail01.Render(program, &gameState->player, elapsed);
-    gameState->snail02.Render(program, &gameState->player, elapsed);
-    gameState->snail03.Render(program, &gameState->player, elapsed);
+//    gameState->snail01.Render(program, &gameState->player, elapsed);
+//    gameState->snail02.Render(program, &gameState->player, elapsed);
+//    gameState->snail03.Render(program, &gameState->player, elapsed);
+    
+    gameState->snail04.Render(program, &gameState->player, elapsed);
+    gameState->snail05.Render(program, &gameState->player, elapsed);
     
     gameState->coin.Render(program, &gameState->player, elapsed);
     
@@ -1044,9 +1105,9 @@ int main(int argc, char *argv[])
     
 
     mainMenuState menuState;
-    gameState gameState1;
-    gameState gameState2;
-    gameState gameState3;
+    gameState gameState1(1);
+    gameState gameState2(2);
+    gameState gameState3(3);
     GameMode mode = STATE_MAIN_MENU;
     
     SDL_Event event;

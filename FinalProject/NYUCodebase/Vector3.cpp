@@ -24,6 +24,14 @@ void Vector3::normalize(){
     }
 };
 
+Vector3& Vector3::operator=(Vector3 rhs){
+    x = rhs.x;
+    y = rhs.y;
+    z = rhs.z;
+    
+    return *this;
+}
+
 
 
 

@@ -17,6 +17,8 @@ public:
     
     void normalize();
     
+    Vector3& operator=(Vector3 rhs);
+    
     float x;
     float y;
     float z;
