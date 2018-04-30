@@ -36,6 +36,10 @@
 		0518F1C9209595A10049558A /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1C7209595A10049558A /* Vector3.cpp */; };
 		0518F1CD209664E20049558A /* SheetSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1CB209664E20049558A /* SheetSprite.cpp */; };
 		0518F1D0209666460049558A /* Entity_untextured.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1CF209666460049558A /* Entity_untextured.cpp */; };
+		0518F1D32096E0480049558A /* level.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D22096E0470049558A /* level.png */; };
+		0518F1D52096E0C90049558A /* level2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D42096E0C90049558A /* level2.png */; };
+		0518F1D72096E0DF0049558A /* level3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D62096E0DF0049558A /* level3.png */; };
+		0518F1D92096E1090049558A /* level1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D82096E1090049558A /* level1.png */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -85,6 +89,10 @@
 		0518F1CE209664FA0049558A /* SheetSprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SheetSprite.h; sourceTree = "<group>"; };
 		0518F1CF209666460049558A /* Entity_untextured.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Entity_untextured.cpp; sourceTree = "<group>"; };
 		0518F1D1209666570049558A /* Entity_untextured.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entity_untextured.h; sourceTree = "<group>"; };
+		0518F1D22096E0470049558A /* level.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level.png; sourceTree = "<group>"; };
+		0518F1D42096E0C90049558A /* level2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level2.png; sourceTree = "<group>"; };
+		0518F1D62096E0DF0049558A /* level3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level3.png; sourceTree = "<group>"; };
+		0518F1D82096E1090049558A /* level1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level1.png; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -239,6 +247,10 @@
 				0518F1C120926C970049558A /* snailWalk1.png */,
 				0518F1C320926E810049558A /* snailWalk2.png */,
 				0518F1C520927BF90049558A /* snailShell.png */,
+				0518F1D22096E0470049558A /* level.png */,
+				0518F1D82096E1090049558A /* level1.png */,
+				0518F1D42096E0C90049558A /* level2.png */,
+				0518F1D62096E0DF0049558A /* level3.png */,
 				0518F1B92091AB8A0049558A /* level1BG.png */,
 				0518F1BB2091AF0F0049558A /* level2BG.png */,
 				0518F1BD2091AF510049558A /* level3BG.png */,
@@ -319,13 +331,17 @@
 				0518F1C02092631F0049558A /* snail.png in Resources */,
 				0518F1A72091A1730049558A /* p1_walk05.png in Resources */,
 				0518F1C620927BFA0049558A /* snailShell.png in Resources */,
+				0518F1D52096E0C90049558A /* level2.png in Resources */,
 				0518F19E2090437A0049558A /* bg_castle.png in Resources */,
 				0518F1C220926C970049558A /* snailWalk1.png in Resources */,
 				6DE9D2F11BA6AB8C002D599C /* fragment_textured.glsl in Resources */,
+				0518F1D32096E0480049558A /* level.png in Resources */,
+				0518F1D92096E1090049558A /* level1.png in Resources */,
 				0518F1A62091A1730049558A /* p1_walk04.png in Resources */,
 				0518F1B82091AAE30049558A /* mainBG.png in Resources */,
 				6D5A86C619AE5C710066C1FD /* Images.xcassets in Resources */,
 				0518F19420900E0D0049558A /* p1_jump.png in Resources */,
+				0518F1D72096E0DF0049558A /* level3.png in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
 				0518F18A208EF0B30049558A /* woodSpriteSheet.png in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,

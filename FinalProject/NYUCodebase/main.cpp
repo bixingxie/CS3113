@@ -28,8 +28,9 @@
 
 //Globals
 SDL_Window* displayWindow;
-bool gameOver = false;
-enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_GAME_OVER, STATE_WIN};
+//bool gameOver = false;
+
+enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_GAME_OVER, STATE_WIN, STATE_LOSE};
 enum EntityType {ENTITY_PLAYER, ENTITY_ENEMY_SNAIL, ENTITY_COIN, ENTITY_STATIC};
 
 
@@ -112,16 +113,15 @@ public:
             
             const Uint8 *keys = SDL_GetKeyboardState(NULL);
             
-            if(gameOver == false){
-                if(keys[SDL_SCANCODE_RIGHT]){
-                    acceleration.x = 2.5f;
-                }else if(keys[SDL_SCANCODE_LEFT]){
-                    acceleration.x = -2.5f;
-                }else{
-                    acceleration.x = 0.0f;
-                }
+            if(keys[SDL_SCANCODE_RIGHT]){
+                acceleration.x = 2.5f;
+            }else if(keys[SDL_SCANCODE_LEFT]){
+                acceleration.x = -2.5f;
+            }else{
+                acceleration.x = 0.0f;
             }
-                
+        
+            
             velocity.x = lerp(velocity.x, 0.0f, elapsed * 1.5f);
             velocity.x += acceleration.x * elapsed;
             position.x += velocity.x * elapsed;
@@ -379,14 +379,16 @@ public:
     }
     
     
-    bool CollidesWithX(Entity* entity){
+    bool CollidesWithX(Entity* entity, GameMode& mode){
         
         if(position.x+size.x*0.5 < entity->position.x-entity->size.x*0.5 || position.x-size.x*0.5 > entity->position.x+entity->size.x*0.5|| position.y+size.y*0.5 < entity->position.y-entity->size.y*0.5 || position.y-size.y*0.5 > entity->position.y+entity->size.y*0.5){
             return false;
         }else{
             if(entity->entityType == ENTITY_COIN){
                 entity->position.x = -2000.0f;
-                gameOver = true;
+                mode = STATE_WIN;
+//                gameOver = true;
+                
             }else if(entity->entityType == ENTITY_STATIC){
                 double Xpenetration = 0.0f;
                 
@@ -408,14 +410,15 @@ public:
         }
     }
     
-    bool CollidesWithY(Entity* entity){
+    bool CollidesWithY(Entity* entity, GameMode& mode){
         
         if(position.x+size.x*0.5 < entity->position.x-entity->size.x*0.5 || position.x-size.x*0.5 > entity->position.x+entity->size.x*0.5|| position.y+size.y*0.5 < entity->position.y-entity->size.y*0.5 || position.y-size.y*0.5 > entity->position.y+entity->size.y*0.5){
             return false;
         }else{
             if(entity->entityType == ENTITY_COIN){
                 entity->position.x = -2000.0f;
-                gameOver = true;
+//                gameOver = true;
+                mode = STATE_WIN;
             }else if(entity->entityType == ENTITY_STATIC){
                 double Ypenetration = 0.0f;
                 
@@ -501,6 +504,8 @@ public:
     board4(-0.1f, -0.8f, 1.7f, 0.55f){
         fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
         mainBGTexture = LoadTexture(RESOURCE_FOLDER"mainBG.png");
+        winBGTexture = LoadTexture(RESOURCE_FOLDER"level1BG.png");
+        loseBGTexture = LoadTexture(RESOURCE_FOLDER"level2BG.png");
         font1.size.x = 0.2f;
         font1.size.y = 0.2f;
         font2.size.x = 0.2f;
@@ -515,6 +520,8 @@ public:
     
     GLuint fontTexture;
     GLuint mainBGTexture;
+    GLuint winBGTexture;
+    GLuint loseBGTexture;
     
     Entity font1;
     Entity font2;
@@ -609,6 +616,25 @@ public:
                 woodPtr->blockMadTextureID = blockMadTexture;
             }
             
+        }else if(StateNum == 3){
+            
+            Entity* wood1 = new Entity(woodSheet, -1.0f, -1.3f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood1);
+            Entity* wood2 = new Entity(woodSheet, 1.1f, -0.32f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood2);
+            Entity* wood3 = new Entity(woodSheet, -1.0f, 1.0f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood3);
+            Entity* wood4 = new Entity(woodSheet, -1.0f, -1.3f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood4);
+            Entity* wood5 = new Entity(woodSheet, 1.1f, -0.32f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            woods.push_back(wood5);
+            
+            for(Entity* woodPtr:woods){
+                woodPtr->blockTextureID = blockTexture;
+                woodPtr->blockMadTextureID = blockMadTexture;
+            }
+            
+            
         }
     };
     
@@ -633,9 +659,9 @@ public:
     GLuint walk06 = LoadTexture(RESOURCE_FOLDER"p1_walk06.png");
     GLuint walk07 = LoadTexture(RESOURCE_FOLDER"p1_walk07.png");
     
-    GLuint level1BG = LoadTexture(RESOURCE_FOLDER"level1BG.png");
-    GLuint level2BG = LoadTexture(RESOURCE_FOLDER"level2BG.png");
-    GLuint level3BG = LoadTexture(RESOURCE_FOLDER"level3BG.png");
+    GLuint level1BG = LoadTexture(RESOURCE_FOLDER"level1.png");
+    GLuint level2BG = LoadTexture(RESOURCE_FOLDER"level2.png");
+    GLuint level3BG = LoadTexture(RESOURCE_FOLDER"level3.png");
     
     GLuint snailWalk01 = LoadTexture(RESOURCE_FOLDER"snailWalk1.png");
     GLuint snailWalk02 = LoadTexture(RESOURCE_FOLDER"snailWalk2.png");
@@ -681,18 +707,18 @@ void drawBackground(ShaderProgram* program, GLuint textureID, gameState* gameSta
     glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords01);
     glEnableVertexAttribArray(program->texCoordAttribute);
     
-    if(gameState){
-        
-        //didn't put viewMatrix because it was identity
-        
-        
-        Matrix projModelMatrix = gameState->player.modelMatrix * projectionMatrix;
-        
-        Vector3 finalPos = projModelMatrix * gameState->player.position;
-        
-        std::cout << "x: " << finalPos.x << " y: " << finalPos.y << " z: " << finalPos.z << std::endl;
-        program->SetPlayerPos(finalPos.x, finalPos.y, finalPos.z);
-    }
+//    if(gameState){
+//
+//        //didn't put viewMatrix because it was identity
+//
+//
+//        Matrix projModelMatrix = gameState->player.modelMatrix * projectionMatrix;
+//
+//        Vector3 finalPos = projModelMatrix * gameState->player.position;
+//
+//        std::cout << "x: " << finalPos.x << " y: " << finalPos.y << " z: " << finalPos.z << std::endl;
+//        program->SetPlayerPos(finalPos.x, finalPos.y, finalPos.z);
+//    }
     
     glDrawArrays(GL_TRIANGLES, 0, 6);
     
@@ -727,12 +753,9 @@ void processGameInputLevel1(SDL_Event* event, bool& done, gameState* gameState){
         if (event->type == SDL_QUIT || event->type == SDL_WINDOWEVENT_CLOSE) {
             done = true;
         }else if(event->type == SDL_KEYDOWN){
-            if(gameOver == false){
-                if(event->key.keysym.scancode == SDL_SCANCODE_SPACE && gameState->player.collideBottom == true){
-                    gameState->player.velocity.y = 2.0f;
-                }
+            if(event->key.keysym.scancode == SDL_SCANCODE_SPACE && gameState->player.collideBottom == true){
+                gameState->player.velocity.y = 2.0f;
             }
-                
         }
     }
 }
@@ -757,6 +780,22 @@ void processGameInputLevel3(SDL_Event* event, bool& done, gameState* gameState){
             if(event->key.keysym.scancode == SDL_SCANCODE_SPACE && gameState->player.collideBottom == true){
                 gameState->player.velocity.y = 2.0f;
             }
+        }
+    }
+}
+
+void ProcessWinInput(SDL_Event* event, bool& done, mainMenuState* menuState, GameMode& gameMode){
+    while (SDL_PollEvent(event)) {
+        if (event->type == SDL_QUIT || event->type == SDL_WINDOWEVENT_CLOSE) {
+            done = true;
+        }
+    }
+}
+
+void ProcessLoseInput(SDL_Event* event, bool& done, mainMenuState* menuState, GameMode& gameMode){
+    while (SDL_PollEvent(event)) {
+        if (event->type == SDL_QUIT || event->type == SDL_WINDOWEVENT_CLOSE) {
+            done = true;
         }
     }
 }
@@ -818,14 +857,31 @@ void ProcessMainMenuInput(SDL_Event* event, bool& done, mainMenuState* menuState
     }
 }
 
-void UpdateMainMenu(){}
+void updateMainMenu(){}
 
-void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
+void updateWin(GameMode& mode){
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if(keys[SDL_SCANCODE_ESCAPE]){
+        mode = STATE_MAIN_MENU;
+    }
+}
+
+void updateLose(GameMode& mode){
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    if(keys[SDL_SCANCODE_ESCAPE]){
+        mode = STATE_MAIN_MENU;
+    }
+}
+
+
+void updateGameLevel1(float elapsed, gameState* gameState, GameMode& mode){
     
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
     if(keys[SDL_SCANCODE_ESCAPE]){
-        *mode = STATE_MAIN_MENU;
+        mode = STATE_MAIN_MENU;
     }
 
     gameState->player.collideBottom = false;
@@ -838,12 +894,12 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
     gameState->snail02.UpdateY(elapsed);
     gameState->snail03.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr);
+        gameState->player.CollidesWithY(woodPtr, mode);
     }
-    gameState->player.CollidesWithY(&gameState->coin);
-    gameState->player.CollidesWithY(&gameState->snail01);
-    gameState->player.CollidesWithY(&gameState->snail02);
-    gameState->player.CollidesWithY(&gameState->snail03);
+    gameState->player.CollidesWithY(&gameState->coin, mode);
+    gameState->player.CollidesWithY(&gameState->snail01, mode);
+    gameState->player.CollidesWithY(&gameState->snail02, mode);
+    gameState->player.CollidesWithY(&gameState->snail03, mode);
     
     
     gameState->player.UpdateX(elapsed);
@@ -852,22 +908,22 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode* mode){
     gameState->snail03.UpdateX(elapsed);
     
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr);
+        gameState->player.CollidesWithX(woodPtr, mode);
     }
-    gameState->player.CollidesWithX(&gameState->coin);
-    gameState->player.CollidesWithX(&gameState->snail01);
-    gameState->player.CollidesWithX(&gameState->snail02);
-    gameState->player.CollidesWithX(&gameState->snail03);
+    gameState->player.CollidesWithX(&gameState->coin, mode);
+    gameState->player.CollidesWithX(&gameState->snail01, mode);
+    gameState->player.CollidesWithX(&gameState->snail02, mode);
+    gameState->player.CollidesWithX(&gameState->snail03, mode);
     
 }
 
-void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
+void updateGameLevel2(float elapsed, gameState* gameState, GameMode& mode){
     
     
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
     if(keys[SDL_SCANCODE_ESCAPE]){
-        *mode = STATE_MAIN_MENU;
+        mode = STATE_MAIN_MENU;
     }
     
     gameState->player.collideBottom = false;
@@ -879,35 +935,35 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode* mode){
     gameState->snail04.UpdateY(elapsed);
     gameState->snail05.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr);
+        gameState->player.CollidesWithY(woodPtr, mode);
     }
-    gameState->player.CollidesWithY(&gameState->coin);
-    gameState->player.CollidesWithY(&gameState->snail01);
-    gameState->player.CollidesWithY(&gameState->snail02);
-    gameState->player.CollidesWithY(&gameState->snail03);
+    gameState->player.CollidesWithY(&gameState->coin, mode);
+    gameState->player.CollidesWithY(&gameState->snail01, mode);
+    gameState->player.CollidesWithY(&gameState->snail02, mode);
+    gameState->player.CollidesWithY(&gameState->snail03, mode);
     
-    if(gameOver == false){
-        gameState->player.UpdateX(elapsed);
-    }
+
+    gameState->player.UpdateX(elapsed);
+    
     gameState->snail04.UpdateX(elapsed);
     gameState->snail05.UpdateX(elapsed);
 
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr);
+        gameState->player.CollidesWithX(woodPtr, mode);
     }
-    gameState->player.CollidesWithX(&gameState->coin);
-    gameState->player.CollidesWithX(&gameState->snail01);
-    gameState->player.CollidesWithX(&gameState->snail02);
-    gameState->player.CollidesWithX(&gameState->snail03);
+    gameState->player.CollidesWithX(&gameState->coin, mode);
+    gameState->player.CollidesWithX(&gameState->snail01, mode);
+    gameState->player.CollidesWithX(&gameState->snail02, mode);
+    gameState->player.CollidesWithX(&gameState->snail03, mode);
     
 }
 
-void updateGameLevel3(float elapsed, gameState* gameState, GameMode* mode){
+void updateGameLevel3(float elapsed, gameState* gameState, GameMode& mode){
     
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
     
     if(keys[SDL_SCANCODE_ESCAPE]){
-        *mode = STATE_MAIN_MENU;
+        mode = STATE_MAIN_MENU;
     }
     
     gameState->player.collideBottom = false;
@@ -920,12 +976,12 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode* mode){
     gameState->snail02.UpdateY(elapsed);
     gameState->snail03.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr);
+        gameState->player.CollidesWithY(woodPtr, mode);
     }
-    gameState->player.CollidesWithY(&gameState->coin);
-    gameState->player.CollidesWithY(&gameState->snail01);
-    gameState->player.CollidesWithY(&gameState->snail02);
-    gameState->player.CollidesWithY(&gameState->snail03);
+    gameState->player.CollidesWithY(&gameState->coin, mode);
+    gameState->player.CollidesWithY(&gameState->snail01, mode);
+    gameState->player.CollidesWithY(&gameState->snail02, mode);
+    gameState->player.CollidesWithY(&gameState->snail03, mode);
     
     
     gameState->player.UpdateX(elapsed);
@@ -934,16 +990,61 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode* mode){
     gameState->snail03.UpdateX(elapsed);
     
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr);
+        gameState->player.CollidesWithX(woodPtr, mode);
     }
-    gameState->player.CollidesWithX(&gameState->coin);
-    gameState->player.CollidesWithX(&gameState->snail01);
-    gameState->player.CollidesWithX(&gameState->snail02);
-    gameState->player.CollidesWithX(&gameState->snail03);
+    gameState->player.CollidesWithX(&gameState->coin, mode);
+    gameState->player.CollidesWithX(&gameState->snail01, mode);
+    gameState->player.CollidesWithX(&gameState->snail02, mode);
+    gameState->player.CollidesWithX(&gameState->snail03, mode);
     
 }
 
-void RenderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
+void renderWin(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
+//    glClearColor(209.0f/255.0f, 244.0f/255.0f, 248.0f/255.0f, 1.0f);
+    drawBackground(program, menuState->winBGTexture, NULL);
+    
+    Matrix projectionMatrix;
+    Matrix modelMatrix;
+    projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+    modelMatrix.Translate(menuState->font1.position.x, menuState->font1.position.y, menuState->font1.position.z);
+    Matrix viewMatrix;
+    
+    program->SetProjectionMatrix(projectionMatrix);
+    program->SetModelMatrix(modelMatrix);
+    program->SetViewMatrix(viewMatrix);
+    
+    DrawText(program, menuState->fontTexture, "YOU'VE WON!!!", menuState->font1.size.x, -menuState->font1.size.x/2.5);
+    modelMatrix.Identity();
+    modelMatrix.Translate(menuState->font2.position.x, menuState->font2.position.y, menuState->font2.position.z);
+    program->SetModelMatrix(modelMatrix);
+
+    DrawText(program, menuState->fontTexture, "PRESE ESC TO RETURN", menuState->font2.size.x, -menuState->font2.size.x/2.5);
+}
+
+void renderLose(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
+
+    drawBackground(program, menuState->loseBGTexture, NULL);
+    
+    Matrix projectionMatrix;
+    Matrix modelMatrix;
+    projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+    modelMatrix.Translate(menuState->font2.position.x, menuState->font2.position.y, menuState->font2.position.z);
+    Matrix viewMatrix;
+    
+    program->SetProjectionMatrix(projectionMatrix);
+    program->SetModelMatrix(modelMatrix);
+    program->SetViewMatrix(viewMatrix);
+    
+    DrawText(program, menuState->fontTexture, "YOU'VE LOST!!!", menuState->font1.size.x, -menuState->font1.size.x/2.5);
+    modelMatrix.Identity();
+    modelMatrix.Translate(menuState->font4.position.x, menuState->font4.position.y, menuState->font4.position.z);
+    program->SetModelMatrix(modelMatrix);
+    
+    DrawText(program, menuState->fontTexture, "PRESE ESC TO RETURN", menuState->font2.size.x, -menuState->font2.size.x/2.5);
+}
+
+
+void renderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
     
     //    glClearColor(209.0f/255.0f, 244.0f/255.0f, 248.0f/255.0f, 1.0f);
     
@@ -995,28 +1096,7 @@ void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapse
     gameState->snail01.Render(program, &gameState->player, elapsed);
     gameState->snail02.Render(program, &gameState->player, elapsed);
     gameState->snail03.Render(program, &gameState->player, elapsed);
-   
-    
     gameState->coin.Render(program, &gameState->player, elapsed);
-    
-    if(gameOver){
-        Matrix projectionMatrix;
-        Matrix modelMatrix;
-        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-        modelMatrix.Translate(gameState->font1.position.x, gameState->font1.position.y, gameState->font1.position.z);
-        Matrix viewMatrix;
-        
-        program->SetProjectionMatrix(projectionMatrix);
-        program->SetModelMatrix(modelMatrix);
-        program->SetViewMatrix(viewMatrix);
-        
-        DrawText(program, gameState->fontTexture, "YOU'VE WON!!!", gameState->font1.size.x, -gameState->font1.size.x/2.5);
-        modelMatrix.Identity();
-        modelMatrix.Translate(gameState->font2.position.x, gameState->font2.position.y, gameState->font2.position.z);
-        program->SetModelMatrix(modelMatrix);
-        
-        DrawText(program, gameState->fontTexture, "PRESE ESC TO RETURN", gameState->font2.size.x, -gameState->font2.size.x/2.5);
-    }
 }
 
 void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapsed){
@@ -1026,34 +1106,10 @@ void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapse
     for (Entity* woodPtr : gameState->woods){
         woodPtr->Render(program, &gameState->player, elapsed);
     }
-    
-//    gameState->snail01.Render(program, &gameState->player, elapsed);
-//    gameState->snail02.Render(program, &gameState->player, elapsed);
-//    gameState->snail03.Render(program, &gameState->player, elapsed);
-    
+
     gameState->snail04.Render(program, &gameState->player, elapsed);
     gameState->snail05.Render(program, &gameState->player, elapsed);
-    
     gameState->coin.Render(program, &gameState->player, elapsed);
-    
-    if(gameOver){
-        Matrix projectionMatrix;
-        Matrix modelMatrix;
-        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-        modelMatrix.Translate(gameState->font1.position.x, gameState->font1.position.y, gameState->font1.position.z);
-        Matrix viewMatrix;
-        
-        program->SetProjectionMatrix(projectionMatrix);
-        program->SetModelMatrix(modelMatrix);
-        program->SetViewMatrix(viewMatrix);
-        
-        DrawText(program, gameState->fontTexture, "YOU'VE WON!!!", gameState->font1.size.x, -gameState->font1.size.x/2.5);
-        modelMatrix.Identity();
-        modelMatrix.Translate(gameState->font2.position.x, gameState->font2.position.y, gameState->font2.position.z);
-        program->SetModelMatrix(modelMatrix);
-        
-        DrawText(program, gameState->fontTexture, "PRESE ESC TO RETURN", gameState->font2.size.x, -gameState->font2.size.x/2.5);
-    }
 }
 
 void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapsed){
@@ -1067,27 +1123,7 @@ void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapse
     gameState->snail01.Render(program, &gameState->player, elapsed);
     gameState->snail02.Render(program, &gameState->player, elapsed);
     gameState->snail03.Render(program, &gameState->player, elapsed);
-    
     gameState->coin.Render(program, &gameState->player, elapsed);
-    
-    if(gameOver){
-        Matrix projectionMatrix;
-        Matrix modelMatrix;
-        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-        modelMatrix.Translate(gameState->font1.position.x, gameState->font1.position.y, gameState->font1.position.z);
-        Matrix viewMatrix;
-        
-        program->SetProjectionMatrix(projectionMatrix);
-        program->SetModelMatrix(modelMatrix);
-        program->SetViewMatrix(viewMatrix);
-        
-        DrawText(program, gameState->fontTexture, "YOU'VE WON!!!", gameState->font1.size.x, -gameState->font1.size.x/2.5);
-        modelMatrix.Identity();
-        modelMatrix.Translate(gameState->font2.position.x, gameState->font2.position.y, gameState->font2.position.z);
-        program->SetModelMatrix(modelMatrix);
-        
-        DrawText(program, gameState->fontTexture, "PRESE ESC TO RETURN", gameState->font2.size.x, -gameState->font2.size.x/2.5);
-    }
 }
 
 void cleanup(){
@@ -1123,8 +1159,12 @@ int main(int argc, char *argv[])
             continue; }
         
         if(mode == STATE_MAIN_MENU){
-            gameOver = false;
+//            gameOver = false;
             ProcessMainMenuInput(&event, done, &menuState, mode);
+        }else if(mode == STATE_WIN){
+            ProcessWinInput(&event, done, &menuState, mode);
+        }else if(mode == STATE_LOSE){
+            ProcessWinInput(&event, done, &menuState, mode);
         }else if(mode == STATE_GAME_LEVEL_1){
             processGameInputLevel1(&event, done, &gameState1);
         }else if(mode == STATE_GAME_LEVEL_2){
@@ -1137,13 +1177,17 @@ int main(int argc, char *argv[])
         
         while(elapsed >= FIXED_TIMESTEP) {
             if(mode == STATE_MAIN_MENU){
-                UpdateMainMenu();
+                updateMainMenu();
+            }else if(mode == STATE_WIN){
+                updateWin(mode);
+            }else if(mode == STATE_LOSE){
+                updateLose(mode);
             }else if(mode == STATE_GAME_LEVEL_1){
-                updateGameLevel1(FIXED_TIMESTEP, &gameState1, &mode);
+                updateGameLevel1(FIXED_TIMESTEP, &gameState1, mode);
             }else if(mode == STATE_GAME_LEVEL_2){
-                updateGameLevel2(FIXED_TIMESTEP, &gameState2, &mode);
+                updateGameLevel2(FIXED_TIMESTEP, &gameState2, mode);
             }else if(mode == STATE_GAME_LEVEL_3){
-                updateGameLevel3(FIXED_TIMESTEP, &gameState3, &mode);
+                updateGameLevel3(FIXED_TIMESTEP, &gameState3, mode);
             }
             
             elapsed -= FIXED_TIMESTEP;
@@ -1151,7 +1195,11 @@ int main(int argc, char *argv[])
         
         accumulator = elapsed;
         if(mode == STATE_MAIN_MENU){
-            RenderMainMenu(&program, &program_untextured, &menuState);
+            renderMainMenu(&program, &program_untextured, &menuState);
+        }else if(mode == STATE_WIN){
+            renderWin(&program, &program_untextured, &menuState);
+        }else if(mode == STATE_LOSE){
+            renderWin(&program, &program_untextured, &menuState);
         }else if(mode == STATE_GAME_LEVEL_1){
             renderGameLevel1(&program, &gameState1, FIXED_TIMESTEP);
         }else if(mode == STATE_GAME_LEVEL_2){
