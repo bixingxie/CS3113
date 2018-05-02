@@ -11,17 +11,17 @@ vec3 point_light_col = vec3(0.999, 0.999, 0.999);
 
 void main() {
 //
-//    vec4 frag_color = texture2D(diffuse, texCoordVar);
-//    if(frag_color.a < 1.0)
-//        discard;
-//    
-//    float distance = distance(lightPos.xy, v_position.xy);
-//    float diffuse = 0.0;
-//
-//    if (distance <= lightIntensity)
-//        diffuse =  1.0 - abs(distance / lightIntensity);
-//
-//    gl_FragColor = vec4(min(frag_color.rgb * ((point_light_col * diffuse)), frag_color.rgb), 1.0);
+    vec4 frag_color = texture2D(diffuse, texCoordVar);
+    if(frag_color.a < 1.0)
+        discard;
+    
+    float distance = distance(lightPos.xy, v_position.xy);
+    float diffuse = 0.0;
 
-    gl_FragColor = texture2D(diffuse, texCoordVar);
+    if (distance <= lightIntensity)
+        diffuse =  1.0 - abs(distance / lightIntensity);
+
+    gl_FragColor = vec4(min(frag_color.rgb * ((point_light_col * diffuse)), frag_color.rgb), 1.0);
+
+//    gl_FragColor = texture2D(diffuse, texCoordVar);
 }

@@ -31,7 +31,7 @@ SDL_Window* displayWindow;
 
 
 enum GameMode { STATE_MAIN_MENU, STATE_GAME_LEVEL_1, STATE_GAME_LEVEL_2, STATE_GAME_LEVEL_3, STATE_GAME_OVER, STATE_WIN, STATE_LOSE};
-enum EntityType {ENTITY_PLAYER, ENTITY_ENEMY_SNAIL, ENTITY_COIN, ENTITY_STATIC};
+enum EntityType {ENTITY_PLAYER, ENTITY_ENEMY_SNAIL, ENTITY_ENEMY_FLY, ENTITY_COIN, ENTITY_STATIC};
 
 
 GLuint LoadTexture(const char* filepath){
@@ -177,6 +177,22 @@ public:
             velocity.x = lerp(velocity.x, 0.0f, elapsed * 10.0f);
             velocity.x += acceleration.x * elapsed;
             position.x += velocity.x * elapsed;
+        }else if(entityType == ENTITY_ENEMY_FLY){
+            if(collideTop || collideBottom || collideLeft || collideRight){
+                acceleration.x = 20.0f;
+                mode = STATE_LOSE;
+            }else{
+                if(position.x <= -3.55+1.0*0.5*0.2){
+                    invertX = true;
+                    acceleration.x = 3.0f;
+                }else if(position.x >= -2.2f){
+                    invertX = false;
+                    acceleration.x = -3.0f;
+                }
+                velocity.x = lerp(velocity.x, 0.0f, elapsed * 10.0f);
+                velocity.x += acceleration.x * elapsed;
+                position.x += velocity.x * elapsed;
+            }
         }
     }
     
@@ -269,6 +285,12 @@ public:
                 }
                 animate(program, elapsed);
             }
+        }else if (entityType == ENTITY_ENEMY_FLY){
+            if(invertX){
+                modelMatrix.Scale(-1.0f, 1.0f, 1.0f);
+                program->SetModelMatrix(modelMatrix);
+            }
+            animate(program, elapsed);
         }
     }
     
@@ -374,7 +396,27 @@ public:
                 drawSingleSprite(program, snailWalk02);
             }
             
-
+        }else if(entityType == ENTITY_ENEMY_FLY){
+            const int runAnimation[] = {1, 2};
+            const int numFrames = 2;
+            float framesPerSecond = 10.0f;
+            
+            animationElapsed += elapsed;
+            
+            if(animationElapsed >= 1.0/framesPerSecond){
+                currentIndex++;
+                animationElapsed = 0.0;
+                
+                if(currentIndex>numFrames-1){
+                    currentIndex = 0;
+                }
+            }
+            
+            if(runAnimation[currentIndex]==1){
+                drawSingleSprite(program, fly01);
+            }else if(runAnimation[currentIndex]==2){
+                drawSingleSprite(program, fly02);
+            }
         }
     }
     
@@ -402,7 +444,7 @@ public:
                 }
                 
                 velocity.x = 0.0f;
-            }else if(entity->entityType == ENTITY_ENEMY_SNAIL){
+            }else if(entity->entityType == ENTITY_ENEMY_SNAIL || entity->entityType == ENTITY_ENEMY_FLY){
                 entity->collideLeft = true;
                 entity->collideRight = true;
             }
@@ -436,17 +478,14 @@ public:
                 
                 velocity.y = 0.0f;
                 
-            }else if(entity->entityType == ENTITY_ENEMY_SNAIL){
+            }else if(entity->entityType == ENTITY_ENEMY_SNAIL || entity->entityType == ENTITY_ENEMY_FLY){
                 if(position.y>entity->position.y){
                     collideBottom = true;
                     entity->collideTop = true;
-//                    std::cout << "THE SNAIL IS DEAD!!!" << std::endl;
                 }else{
                     collideTop = true;
                     entity->collideBottom = true;
-//                    std::cout << "I'M DEADD???" << std::endl;
                 }
-                
             }
             return true;
         }
@@ -478,6 +517,9 @@ public:
     GLuint walk05;
     GLuint walk06;
     GLuint walk07;
+    
+    GLuint fly01;
+    GLuint fly02;
     
     GLuint snailWalk01;
     GLuint snailWalk02;
@@ -545,7 +587,8 @@ public:
     snail02(playerSheet, -1.5f+0.9f, -1.5f+0.7f+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
     snail03(playerSheet, -1.5f+2.3f, -1.5f+2.1f+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
     snail04(playerSheet, -1.0f, -1.0+2.0*0.2*0.5-1.0*0.5*0.5, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -1.0f, -2.0f, ENTITY_ENEMY_SNAIL),
-    snail05(playerSheet, -2.0f, -2.0+1.0/1.5*0.5*0.2, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -2.0f, -2.0f, ENTITY_ENEMY_SNAIL)
+    snail05(playerSheet, -2.0f, -2.0+1.0/1.5*0.5*0.2, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -2.0f, -2.0f, ENTITY_ENEMY_SNAIL),
+    fly(playerSheet, -2.0f, 1.1f, 1.5f/1.5, 1.0f/1.5, 0.0, 0.0f, -2.0f, -3.0f, ENTITY_ENEMY_FLY)
     {
         
         player.frontTextureID = p1_front;
@@ -581,6 +624,9 @@ public:
         snail05.snailWalk02 = snailWalk02;
         snail05.snailShell = snailShell;
         snail05.snailNum = 5;
+        
+        fly.fly01 = fly01;
+        fly.fly02 = fly02;
         
         font1.size.x = 0.2f;
         font1.size.y = 0.2f;
@@ -619,18 +665,18 @@ public:
             
         }else if(StateNum == 3){
             
-            coin.position.x = -1.3f;
-            coin.position.y = 0.25f;
+            coin.position.x = -3.0f;
+            coin.position.y = 1.4f;
             
-            Entity* wood1 = new Entity(woodSheet, -1.0f, -1.3f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* wood1 = new Entity(woodSheet, -1.0f, -1.3f, 2.5f*0.9, 2.0f*0.9, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood1);
-            Entity* wood2 = new Entity(woodSheet, 1.1f, -0.32f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* wood2 = new Entity(woodSheet, 1.1f, -0.5f, 2.5f*0.9, 2.0f*0.9, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood2);
-            Entity* wood3 = new Entity(woodSheet, -1.0f, 1.0f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* wood3 = new Entity(woodSheet, -1.0f, 0.6f, 2.5f*0.9, 2.0f*0.9, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood3);
-            Entity* wood4 = new Entity(woodSheet, -2.0f, -1.5f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* wood4 = new Entity(woodSheet, -2.0f, -1.5f, 2.5f*0.9, 2.0f*0.9, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood4);
-            Entity* wood5 = new Entity(woodSheet, 2.0f, -0.2f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* wood5 = new Entity(woodSheet, 2.0f, 0.45f, 2.5f*0.9, 2.0f*0.9, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood5);
             
             for(Entity* woodPtr:woods){
@@ -656,6 +702,9 @@ public:
     GLuint woodSpriteSheet = LoadTexture(RESOURCE_FOLDER"woodSpriteSheet.png");
     GLuint blockTexture = LoadTexture(RESOURCE_FOLDER"blockerBody.png");
     GLuint blockMadTexture = LoadTexture(RESOURCE_FOLDER"blockerMad.png");
+    
+    GLuint fly01 = LoadTexture(RESOURCE_FOLDER"flyFly1.png");
+    GLuint fly02 = LoadTexture(RESOURCE_FOLDER"flyFly2.png");
     
     GLuint walk03 = LoadTexture(RESOURCE_FOLDER"p1_walk03.png");
     GLuint walk04 = LoadTexture(RESOURCE_FOLDER"p1_walk04.png");
@@ -685,6 +734,7 @@ public:
     Entity snail03;
     Entity snail04;
     Entity snail05;
+    Entity fly;
     Entity font1;
     Entity font2;
 };
@@ -968,28 +1018,37 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode& mode){
     gameState->snail01.UpdateY(elapsed);
     gameState->snail02.UpdateY(elapsed);
     gameState->snail03.UpdateY(elapsed);
+//    gameState->snail04.UpdateY(elapsed);
+    gameState->snail05.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithY(woodPtr, mode);
     }
-//    gameState->player.CollidesWithY(&gameState->coin, mode);
-//    gameState->player.CollidesWithY(&gameState->snail01, mode);
-//    gameState->player.CollidesWithY(&gameState->snail02, mode);
-//    gameState->player.CollidesWithY(&gameState->snail03, mode);
-//
-//
+    gameState->player.CollidesWithY(&gameState->coin, mode);
+    gameState->player.CollidesWithY(&gameState->snail01, mode);
+    gameState->player.CollidesWithY(&gameState->snail02, mode);
+    gameState->player.CollidesWithY(&gameState->snail03, mode);
+    gameState->player.CollidesWithY(&gameState->snail05, mode);
+    gameState->player.CollidesWithY(&gameState->fly, mode);
+
+
     gameState->player.UpdateX(elapsed, mode);
     gameState->snail01.UpdateX(elapsed, mode);
     gameState->snail02.UpdateX(elapsed, mode);
     gameState->snail03.UpdateX(elapsed, mode);
+    gameState->snail05.UpdateX(elapsed, mode);
+    gameState->fly.UpdateX(elapsed, mode);
+    
+    
     
     for (Entity* woodPtr : gameState->woods){
         gameState->player.CollidesWithX(woodPtr, mode);
     }
-//    gameState->player.CollidesWithX(&gameState->coin, mode);
-//    gameState->player.CollidesWithX(&gameState->snail01, mode);
-//    gameState->player.CollidesWithX(&gameState->snail02, mode);
-//    gameState->player.CollidesWithX(&gameState->snail03, mode);
-//
+    gameState->player.CollidesWithX(&gameState->coin, mode);
+    gameState->player.CollidesWithX(&gameState->snail01, mode);
+    gameState->player.CollidesWithX(&gameState->snail02, mode);
+    gameState->player.CollidesWithX(&gameState->snail03, mode);
+    gameState->player.CollidesWithX(&gameState->snail05, mode);
+    gameState->player.CollidesWithX(&gameState->fly, mode);
 }
 
 void renderWin(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
@@ -1023,6 +1082,7 @@ void renderLose(ShaderProgram* program, ShaderProgram* program_untextured, mainM
     
     Matrix projectionMatrix;
     Matrix modelMatrix;
+    modelMatrix.Translate(-0.6f, 0.0f, 0.0f);
     projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
     modelMatrix.Translate(menuState->font2.position.x, menuState->font2.position.y, menuState->font2.position.z);
     Matrix viewMatrix;
@@ -1034,6 +1094,7 @@ void renderLose(ShaderProgram* program, ShaderProgram* program_untextured, mainM
     DrawText(program, menuState->fontTexture, "YOU'VE LOST!!!", menuState->font1.size.x, -menuState->font1.size.x/2.5);
     modelMatrix.Identity();
     modelMatrix.Translate(menuState->font4.position.x, menuState->font4.position.y, menuState->font4.position.z);
+    modelMatrix.Translate(-0.4f, 0.0f, 0.0f);
     program->SetModelMatrix(modelMatrix);
     
     DrawText(program, menuState->fontTexture, "PRESE ESC TO RETURN", menuState->font2.size.x, -menuState->font2.size.x/2.5);
@@ -1128,6 +1189,10 @@ void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapse
     gameState->snail01.Render(program, &gameState->player, elapsed);
     gameState->snail02.Render(program, &gameState->player, elapsed);
     gameState->snail03.Render(program, &gameState->player, elapsed);
+//    gameState->snail04.Render(program, &gameState->player, elapsed);
+    gameState->snail05.Render(program, &gameState->player, elapsed);
+    gameState->fly.Render(program, &gameState->player, elapsed);
+    
     gameState->coin.Render(program, &gameState->player, elapsed);
 }
 

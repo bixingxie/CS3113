@@ -40,6 +40,8 @@
 		0518F1D52096E0C90049558A /* level2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D42096E0C90049558A /* level2.png */; };
 		0518F1D72096E0DF0049558A /* level3.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D62096E0DF0049558A /* level3.png */; };
 		0518F1D92096E1090049558A /* level1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D82096E1090049558A /* level1.png */; };
+		0518F1DB20997F6A0049558A /* flyFly1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1DA20997F690049558A /* flyFly1.png */; };
+		0518F1DD20997F700049558A /* flyFly2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1DC20997F700049558A /* flyFly2.png */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -93,6 +95,8 @@
 		0518F1D42096E0C90049558A /* level2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level2.png; sourceTree = "<group>"; };
 		0518F1D62096E0DF0049558A /* level3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level3.png; sourceTree = "<group>"; };
 		0518F1D82096E1090049558A /* level1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level1.png; sourceTree = "<group>"; };
+		0518F1DA20997F690049558A /* flyFly1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flyFly1.png; sourceTree = "<group>"; };
+		0518F1DC20997F700049558A /* flyFly2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flyFly2.png; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -243,6 +247,8 @@
 				0518F1A22091A1730049558A /* p1_walk05.png */,
 				0518F1A42091A1730049558A /* p1_walk06.png */,
 				0518F1A52091A1730049558A /* p1_walk07.png */,
+				0518F1DA20997F690049558A /* flyFly1.png */,
+				0518F1DC20997F700049558A /* flyFly2.png */,
 				0518F1BF2092631F0049558A /* snail.png */,
 				0518F1C120926C970049558A /* snailWalk1.png */,
 				0518F1C320926E810049558A /* snailWalk2.png */,
@@ -326,9 +332,11 @@
 				0518F17520795EEE0049558A /* spaceSpriteSheet.png in Resources */,
 				6DEF23C11B96CC2600BCE792 /* fragment.glsl in Resources */,
 				0518F1BC2091AF0F0049558A /* level2BG.png in Resources */,
+				0518F1DB20997F6A0049558A /* flyFly1.png in Resources */,
 				0518F19A20902C110049558A /* blockerBody.png in Resources */,
 				0518F1A0209196470049558A /* p1_walk.png in Resources */,
 				0518F1C02092631F0049558A /* snail.png in Resources */,
+				0518F1DD20997F700049558A /* flyFly2.png in Resources */,
 				0518F1A72091A1730049558A /* p1_walk05.png in Resources */,
 				0518F1C620927BFA0049558A /* snailShell.png in Resources */,
 				0518F1D52096E0C90049558A /* level2.png in Resources */,
