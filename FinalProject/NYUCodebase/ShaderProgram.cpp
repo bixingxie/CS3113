@@ -24,7 +24,8 @@ void ShaderProgram::Load(const char *vertexShaderFile, const char *fragmentShade
     projectionMatrixUniform = glGetUniformLocation(programID, "projectionMatrix");
     viewMatrixUniform = glGetUniformLocation(programID, "viewMatrix");
 	colorUniform = glGetUniformLocation(programID, "color");
-    playerPositionUniform = glGetUniformLocation(programID, "playerPosition");
+    lightPosUniform = glGetUniformLocation(programID, "lightPos");
+    lightIntensityUniform = glGetUniformLocation(programID, "lightIntensity");
     
     positionAttribute = glGetAttribLocation(programID, "position");
     texCoordAttribute = glGetAttribLocation(programID, "texCoord");
@@ -104,7 +105,12 @@ void ShaderProgram::SetProjectionMatrix(const Matrix &matrix) {
     glUniformMatrix4fv(projectionMatrixUniform, 1, GL_FALSE, matrix.ml);    
 }
 
-void ShaderProgram::SetPlayerPos(float x, float y, float z) {
+void ShaderProgram::SetLightPos(float x, float y) {
     glUseProgram(programID);
-    glUniform4f(playerPositionUniform, x, y, z, 0.0f);
+    glUniform4f(lightPosUniform, x, y, 0.0f, 0.0f);
+}
+
+void ShaderProgram::SetLightIntensity(float val){
+    glUseProgram(programID);
+    glUniform1f(lightIntensityUniform, val);
 }

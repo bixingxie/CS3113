@@ -11,8 +11,8 @@ varying vec4 v_position;
 void main()
 {
     
-	vec4 p =  projectionMatrix * modelMatrix  * position;
+	vec4 p =  modelMatrix  * position;
     texCoordVar = texCoord;
     v_position = p;
-	gl_Position = viewMatrix *  p;
+	gl_Position = projectionMatrix * viewMatrix *  p;
 }
