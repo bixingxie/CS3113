@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "light.h"
 #include "Matrix.h"
 
 class ShaderProgram {
@@ -18,7 +19,7 @@ class ShaderProgram {
         void SetModelMatrix(const Matrix &matrix);
         void SetProjectionMatrix(const Matrix &matrix);
         void SetViewMatrix(const Matrix &matrix);
-        void SetLightPos(float x, float y);
+        void SetLightPos(light lights[4]);
         void SetLightIntensity(float val);
 		void SetColor(float r, float g, float b, float a);
 	

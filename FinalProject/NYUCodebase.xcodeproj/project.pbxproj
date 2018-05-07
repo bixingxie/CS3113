@@ -42,6 +42,11 @@
 		0518F1D92096E1090049558A /* level1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1D82096E1090049558A /* level1.png */; };
 		0518F1DB20997F6A0049558A /* flyFly1.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1DA20997F690049558A /* flyFly1.png */; };
 		0518F1DD20997F700049558A /* flyFly2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1DC20997F700049558A /* flyFly2.png */; };
+		0518F1DF209FBA490049558A /* light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1DE209FBA490049558A /* light.cpp */; };
+		0518F1E2209FF4C20049558A /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0518F1E1209FF4C20049558A /* SDL2_mixer.framework */; };
+		0518F1E5209FF5D00049558A /* level1.WAV in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1E4209FF5D00049558A /* level1.WAV */; };
+		0518F1E9209FFEC50049558A /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1E8209FFEC40049558A /* jump.wav */; };
+		0518F1EB20A001600049558A /* scream.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1EA20A001600049558A /* scream.wav */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -97,6 +102,13 @@
 		0518F1D82096E1090049558A /* level1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = level1.png; sourceTree = "<group>"; };
 		0518F1DA20997F690049558A /* flyFly1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flyFly1.png; sourceTree = "<group>"; };
 		0518F1DC20997F700049558A /* flyFly2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flyFly2.png; sourceTree = "<group>"; };
+		0518F1DE209FBA490049558A /* light.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = light.cpp; sourceTree = "<group>"; };
+		0518F1E0209FBA550049558A /* light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = light.h; sourceTree = "<group>"; };
+		0518F1E1209FF4C20049558A /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SDL2_mixer.framework; sourceTree = "<group>"; };
+		0518F1E3209FF4D30049558A /* SDL_mixer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDL_mixer.h; sourceTree = "<group>"; };
+		0518F1E4209FF5D00049558A /* level1.WAV */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = level1.WAV; sourceTree = "<group>"; };
+		0518F1E8209FFEC40049558A /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = "<group>"; };
+		0518F1EA20A001600049558A /* scream.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = scream.wav; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -128,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D5AC2D019AE6280004CB1BF /* OpenGL.framework in Frameworks */,
+				0518F1E2209FF4C20049558A /* SDL2_mixer.framework in Frameworks */,
 				6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */,
 				6D5A86E319AE5CD10066C1FD /* SDL2.framework in Frameworks */,
 				6D5AC2D219AE6A1E004CB1BF /* SDL2_image.framework in Frameworks */,
@@ -158,6 +171,7 @@
 		6D5A86AC19AE5C710066C1FD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0518F1E1209FF4C20049558A /* SDL2_mixer.framework */,
 				6D5AC2D119AE6A1E004CB1BF /* SDL2_image.framework */,
 				6D5AC2CF19AE6280004CB1BF /* OpenGL.framework */,
 				6D5A86E219AE5CD10066C1FD /* SDL2.framework */,
@@ -221,13 +235,18 @@
 				6DEF23BB1B96CC2600BCE792 /* fragment.glsl */,
 				6DC707691BA7273500225B7D /* vertex_textured.glsl */,
 				6DE9D2F01BA6AB8C002D599C /* fragment_textured.glsl */,
+				6D5A86B919AE5C710066C1FD /* main.cpp */,
+				0518F1E4209FF5D00049558A /* level1.WAV */,
+				0518F1EA20A001600049558A /* scream.wav */,
+				0518F1E8209FFEC40049558A /* jump.wav */,
 				6DEF23BD1B96CC2600BCE792 /* Matrix.h */,
 				6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */,
 				0518F1CA209595D70049558A /* Vector3.h */,
 				0518F1C7209595A10049558A /* Vector3.cpp */,
 				6DEF23BF1B96CC2600BCE792 /* ShaderProgram.h */,
 				6DEF23BE1B96CC2600BCE792 /* ShaderProgram.cpp */,
-				6D5A86B919AE5C710066C1FD /* main.cpp */,
+				0518F1E0209FBA550049558A /* light.h */,
+				0518F1DE209FBA490049558A /* light.cpp */,
 				0518F1D1209666570049558A /* Entity_untextured.h */,
 				0518F1CF209666460049558A /* Entity_untextured.cpp */,
 				0518F1CB209664E20049558A /* SheetSprite.cpp */,
@@ -264,6 +283,7 @@
 				0518F19D2090437A0049558A /* bg_castle.png */,
 				0518F18B208EF0CA0049558A /* itemSpriteSheet.png */,
 				0518F17420795EEE0049558A /* spaceSpriteSheet.png */,
+				0518F1E3209FF4D30049558A /* SDL_mixer.h */,
 			);
 			name = Code;
 			sourceTree = "<group>";
@@ -336,9 +356,11 @@
 				0518F19A20902C110049558A /* blockerBody.png in Resources */,
 				0518F1A0209196470049558A /* p1_walk.png in Resources */,
 				0518F1C02092631F0049558A /* snail.png in Resources */,
+				0518F1E5209FF5D00049558A /* level1.WAV in Resources */,
 				0518F1DD20997F700049558A /* flyFly2.png in Resources */,
 				0518F1A72091A1730049558A /* p1_walk05.png in Resources */,
 				0518F1C620927BFA0049558A /* snailShell.png in Resources */,
+				0518F1E9209FFEC50049558A /* jump.wav in Resources */,
 				0518F1D52096E0C90049558A /* level2.png in Resources */,
 				0518F19E2090437A0049558A /* bg_castle.png in Resources */,
 				0518F1C220926C970049558A /* snailWalk1.png in Resources */,
@@ -351,6 +373,7 @@
 				0518F19420900E0D0049558A /* p1_jump.png in Resources */,
 				0518F1D72096E0DF0049558A /* level3.png in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
+				0518F1EB20A001600049558A /* scream.wav in Resources */,
 				0518F18A208EF0B30049558A /* woodSpriteSheet.png in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,
 				0518F1C420926E810049558A /* snailWalk2.png in Resources */,
@@ -374,6 +397,7 @@
 				0518F1CD209664E20049558A /* SheetSprite.cpp in Sources */,
 				0518F1C9209595A10049558A /* Vector3.cpp in Sources */,
 				6DEF23C21B96CC2600BCE792 /* Matrix.cpp in Sources */,
+				0518F1DF209FBA490049558A /* light.cpp in Sources */,
 				0518F1D0209666460049558A /* Entity_untextured.cpp in Sources */,
 				6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */,
 			);
@@ -487,6 +511,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -495,6 +520,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/Library/Frameworks/SDL2_image.framework/Versions/A/Headers,
 					/Library/Frameworks/SDL2.framework/Versions/A/Headers,
+					/Library/Frameworks/SDL2_mixer.framework/Versions/A/Headers,
 				);
 				INFOPLIST_FILE = "NYUCodebase/NYUCodebase-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -510,6 +536,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";

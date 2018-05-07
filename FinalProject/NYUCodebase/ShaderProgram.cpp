@@ -105,9 +105,18 @@ void ShaderProgram::SetProjectionMatrix(const Matrix &matrix) {
     glUniformMatrix4fv(projectionMatrixUniform, 1, GL_FALSE, matrix.ml);    
 }
 
-void ShaderProgram::SetLightPos(float x, float y) {
-    glUseProgram(programID);
-    glUniform4f(lightPosUniform, x, y, 0.0f, 0.0f);
+//void ShaderProgram::SetLightPos(float x, float y) {
+//    glUseProgram(programID);
+//    glUniform2f(lightPosUniform, x, y);
+//}
+
+void ShaderProgram::SetLightPos(light lights[4]){
+    GLfloat lightPositions[6 * 2];
+    for(int i=0; i < 4; i++) {
+        lightPositions[i*2] = lights[i].x;
+        lightPositions[(i*2)+1] = lights[i].y;
+    }
+    glUniform2fv(lightPosUniform, 4, lightPositions);
 }
 
 void ShaderProgram::SetLightIntensity(float val){

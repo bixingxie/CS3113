@@ -10,6 +10,7 @@
 #define Entity_untextured_h
 #include "ShaderProgram.h"
 #include "Vector3.h"
+#include "Matrix.h"
 
 class Entity_untextured{
 public:
@@ -18,8 +19,11 @@ public:
     
     void Draw(ShaderProgram* program);
     
+    void update(float elapsed);
+    
     Vector3 position;
     Vector3 size;
+    Matrix modelMatrix;
 };
 
 
