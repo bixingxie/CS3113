@@ -29,7 +29,7 @@ void main() {
     
     //    vec3 brightness = attenuate(distance(lightPos, varPosition)/lightIntensity, 1.0, 2.0) * lightColor;
     
-//
+
     vec3 lightColor = vec3(1.0, 1.0, 1.0);
 //
 //

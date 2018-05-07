@@ -1,7 +1,6 @@
 
 #include "Matrix.h"
-#include "Vector3.h"
-#include <math.h>
+
 
 Matrix::Matrix() {
     Identity();
