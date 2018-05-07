@@ -50,8 +50,11 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
 //            player = Entity(playerSheet, -3.35f, -1.0f, 1.0f/1.3, 1.5f/1.3, 0.0f, 0.0f, 0.0f, -2.0f, ENTITY_PLAYER);
             player.position.x = -3.35f;
             player.position.y = -1.0f;
+            player.velocity.x = 0.0f;
+            player.velocity.y = 0.0f;
             
             mode = STATE_LOSE;
+            
         }else{
             bool speed = false;
             if(pow(pow((player.position.x-position.x),2)+pow((player.position.y-position.y),2), 0.5) < 0.8f){
@@ -118,6 +121,8 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
             Mix_PlayChannel(-1, screamSound, 0);
             player.position.x = -3.35f;
             player.position.y = -1.0f;
+            player.velocity.x = 0.0f;
+            player.velocity.y = 0.0f;
             mode = STATE_LOSE;
         }else{
             
