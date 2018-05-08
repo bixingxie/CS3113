@@ -26,9 +26,9 @@ void main() {
 //        diffuse =  1.0 - abs(distance / lightIntensity);
 //
 //    gl_FragColor = vec4(min(frag_color.rgb * ((point_light_col * diffuse)), frag_color.rgb), 1.0);
-    
-    //    vec3 brightness = attenuate(distance(lightPos, varPosition)/lightIntensity, 1.0, 2.0) * lightColor;
-    
+//    
+//        vec3 brightness = attenuate(distance(lightPos, varPosition)/lightIntensity, 1.0, 2.0) * lightColor;
+//
 
     vec3 lightColor = vec3(1.0, 1.0, 1.0);
 //

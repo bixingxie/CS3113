@@ -25,62 +25,10 @@
 //Globals
 SDL_Window* displayWindow;
 
-//class Particle {
-//public:
-//    Particle():position(1.0f, 1.0f, 0.0f), velocity(1.0f, 0.0f, 0.0f){}
-//
-//    Vector3 position;
-//    Vector3 velocity;
-//    float lifetime;
-//};
 
-//class ParticleEmitter{
-//public:
-//    ParticleEmitter(unsigned int particleCount):
-//    position(1.0f, 1.0f, 0.0f), gravity(1.0f){
-//        for(int i=0; i < particleCount; i++){
-//            particles.push_back(*new Particle());
-//        }
-//    }
-//
-////    ParticleEmitter();
-////    ~ParticleEmitter();
-//
-//    void Update(float elapsed){
-////        velocity.y += acceleration.y * elapsed;
-////        position.y += velocity.y * elapsed;
-//        position.y -= gravity * elapsed;
-//    }
-//    void Render(ShaderProgram* program){
-//        Matrix projectionMatrix;
-//        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
-//        Matrix modelMatrix;
-//        modelMatrix.Translate(position.x, position.y, position.z);
-//        modelMatrix.Scale(10.0f, 10.0f, 1.0f);
-//        Matrix viewMatrix;
-//
-//        glUseProgram(program->programID);
-//
-//        std::vector<float> vertices;
-//        for(int i=0; i < particles.size(); i++) {
-//            vertices.push_back(particles[i].position.x);
-//            std::cout << particles[i].position.x << std::endl;
-//            vertices.push_back(particles[i].position.y);
-//        }
-//        glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices.data());
-//        glEnableVertexAttribArray(program->positionAttribute);
-//        glDrawArrays(GL_POINTS, 0, particles.size());
-//        glDisableVertexAttribArray(program->positionAttribute);
-//    };
-//
-//    Vector3 position;
-//    float gravity;
-//
-//    float maxLifetime;
-//    std::vector<Particle> particles;
-//};
-
-
+float lerp(float v0, float v1, float t) {
+    return (1.0-t)*v0 + t*v1;
+}
 
 GLuint LoadTexture(const char* filepath){
     int w,h,comp;
@@ -102,6 +50,117 @@ GLuint LoadTexture(const char* filepath){
     stbi_image_free(image);
     return retTexture;
 }
+
+class Particle {
+public:
+    Particle(float x, float y):position(x, y, 0.0f), velocity(0.0f, 0.2f, 0.0f), size(1.0f, 1.0f, 1.0f){}
+
+    Vector3 position;
+    Vector3 velocity;
+    Vector3 size;
+    float lifetime;
+};
+
+class ParticleEmitter{
+public:
+    ParticleEmitter(unsigned int particleCount, float x, float y):
+    position(x, y, 0.0f), gravity(-0.2f), maxLifetime(2.0f){
+        for(int i=0; i < particleCount; i++){
+            Particle newParticle(position.x, position.y);
+            newParticle.lifetime = ((float)rand()/(float)RAND_MAX) * maxLifetime;
+            newParticle.size.x *= ((float)rand()/(float)RAND_MAX);
+            newParticle.size.y *= ((float)rand()/(float)RAND_MAX);
+            newParticle.velocity.y *= ((float)rand()/(float)RAND_MAX);
+            particles.push_back(newParticle);
+        }
+    }
+
+    void Update(float elapsed){
+        for(int i = 0; i<particles.size(); i++){
+            particles[i].position.x += particles[i].velocity.x*elapsed;
+            particles[i].position.y += particles[i].velocity.y*elapsed;
+            
+            particles[i].velocity.y -= gravity * elapsed;
+            particles[i].lifetime += elapsed;
+            
+            if(particles[i].lifetime >= maxLifetime){
+                particles[i].lifetime = 0.0f;
+                particles[i].position.x = position.x;
+                particles[i].position.y = position.y;
+                particles[i].velocity.y = 0.2f;
+                particles[i].velocity.y *= ((float)rand()/(float)RAND_MAX);
+            }
+        }
+        
+    }
+    void Render(ShaderProgram* program){
+        
+        Matrix projectionMatrix;
+        projectionMatrix.SetOrthoProjection(-3.55f, 3.55f, -2.0f, 2.0f, -1.0f, 1.0f);
+        Matrix modelMatrix;
+        Matrix viewMatrix;
+        
+        program->SetViewMatrix(viewMatrix);
+        program->SetModelMatrix(modelMatrix);
+        program->SetProjectionMatrix(projectionMatrix);
+        
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE);
+
+        glUseProgram(program->programID);
+        
+        std::vector<float> vertices;
+        std::vector<float> texCoords;
+
+        for(int i = 0; i < particles.size(); i++){
+            float m = (particles[i].lifetime/maxLifetime);
+            float size = lerp(startSize, endSize, m);
+
+            vertices.insert(vertices.end(), {
+                particles[i].position.x - size, particles[i].position.y + size,
+                particles[i].position.x - size, particles[i].position.y - size,
+                particles[i].position.x + size, particles[i].position.y + size,
+                particles[i].position.x + size, particles[i].position.y + size,
+                particles[i].position.x - size, particles[i].position.y - size,
+                particles[i].position.x + size, particles[i].position.y - size
+            });
+            texCoords.insert(texCoords.end(), {
+                0.0f, 0.0f,
+                0.0f, 1.0f,
+                1.0f, 0.0f,
+                1.0f, 0.0f,
+                0.0f, 1.0f,
+                1.0f, 1.0f
+            });
+    }
+        
+        glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices.data());
+        glEnableVertexAttribArray(program->positionAttribute);
+        glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords.data());
+        glEnableVertexAttribArray(program->texCoordAttribute);
+        
+        glBindTexture(GL_TEXTURE_2D, fireTexture);
+        glDrawArrays(GL_TRIANGLES, 0, int(vertices.size()/2));
+        
+        
+        glDisableVertexAttribArray(program->positionAttribute);
+        glDisableVertexAttribArray(program->texCoordAttribute);
+        
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        
+    };
+    
+
+    float startSize = 0.5f;
+    float endSize = 0.0f;
+    Vector3 position;
+    float gravity;
+    GLuint fireTexture = LoadTexture(RESOURCE_FOLDER"fire2.png");
+
+    float maxLifetime;
+    std::vector<Particle> particles;
+};
+
 
 
 void DrawText(ShaderProgram *program, GLuint fontTexture, std::string text, float size, float spacing) {
@@ -190,9 +249,8 @@ public:
 
 class gameState{
 public:
-    gameState(GLuint StateNum)
+    gameState(GLuint StateNum):emit(12, 0.3, -1.8)
     {
-        
         fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
         alienTexture = LoadTexture(RESOURCE_FOLDER"alienGreen.png");
         spaceSpriteSheet = LoadTexture(RESOURCE_FOLDER"spaceSpriteSheet.png");
@@ -392,7 +450,7 @@ public:
     
     Mix_Chunk* jumpSound;
     
-//    ParticleEmitter emit;
+    ParticleEmitter emit;
 };
 
 void drawBackground(ShaderProgram* program, GLuint textureID, gameState* gameState){
@@ -631,7 +689,7 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode& mode){
     gameState->player.CollidesWithX(&gameState->snail02, mode);
     gameState->player.CollidesWithX(&gameState->snail03, mode);
     
-//    gameState->emit.Update(elapsed);
+    gameState->emit.Update(elapsed);
     
 }
 
@@ -778,16 +836,25 @@ void renderLose(ShaderProgram* program, ShaderProgram* program_untextured, mainM
     DrawText(program, menuState->fontTexture, "PRESE ESC TO RETURN", menuState->font2.size.x, -menuState->font2.size.x/2.5);
 }
 
+float timeAll = 0.0f;
 
-void renderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
+
+void renderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState, float elapsed){
     
 //    font1(SheetSprite(), -2.08, 0.3f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
 //    font2(SheetSprite(), -0.28f, 0.3f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
 //    font3(SheetSprite(), 1.57f, 0.3f, 0.2f, 0.2f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC),
 //    font4(SheetSprite(), -0.8f,-0.8f
     
-    light lights[4] = {*new light(-2.08, 0.3f), *new light(-0.28f, 0.3f), *new light(1.57f, 0.3f), *new light(-0.8f,-0.8f)};
-    program->SetLightPos(lights);
+    timeAll += elapsed;
+    if(int(timeAll)%2 ==0){
+    
+        light lights[4] = {*new light(-2.08, 0.3f), *new light(-0.28f, 0.3f), *new light(1.57f, 0.3f), *new light(-0.8f,-0.8f)};
+        program->SetLightPos(lights);
+    }else{
+        light lights[4] = {*new light(-2000, -1.5f), *new light(0.00f, -0.0f), *new light(-2000.0f, -0.3f), *new light(-2000,1.0f)};
+        program->SetLightPos(lights);
+    }
     
     //    glClearColor(209.0f/255.0f, 244.0f/255.0f, 248.0f/255.0f, 1.0f);
     program->SetLightIntensity(1.0f);
@@ -832,7 +899,9 @@ void renderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, m
 
 void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapsed){
     
-    light lights[4] = {*new light(gameState->player.position.x, gameState->player.position.y), *new light(-1000.0f, 0.3f), *new light(1000.0f, 0.3f), *new light(1000.0f,-0.8f)};
+    glUseProgram(program->programID);
+    
+    light lights[4] = {*new light(gameState->player.position.x, gameState->player.position.y), *new light(0.3, -1.7f), *new light(1000.0f, 0.3f), *new light(1000.0f,-0.8f)};
     program->SetLightPos(lights);
     program->SetLightIntensity(0.5f);
 //    program->SetLightPos(gameState->player.position.x, gameState->player.position.y);
@@ -849,7 +918,7 @@ void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapse
     gameState->snail03.Render(program, &gameState->player, elapsed);
     gameState->coin.Render(program, &gameState->player, elapsed);
     
-//    gameState->emit.Render(program);
+    gameState->emit.Render(program);
 }
 
 void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapsed){
@@ -959,7 +1028,7 @@ int main(int argc, char *argv[])
         
         accumulator = elapsed;
         if(mode == STATE_MAIN_MENU){
-            renderMainMenu(&program, &program_untextured, &menuState);
+            renderMainMenu(&program, &program_untextured, &menuState, FIXED_TIMESTEP);
         }else if(mode == STATE_WIN){
             renderWin(&program, &program_untextured, &menuState);
         }else if(mode == STATE_LOSE){

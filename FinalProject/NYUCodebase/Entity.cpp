@@ -9,10 +9,8 @@
 #include "Entity.h"
 
 
+float lerp(float v0, float v1, float t);
 
-float lerp(float v0, float v1, float t) {
-    return (1.0-t)*v0 + t*v1;
-}
 
 Entity::Entity(){};
 
@@ -162,6 +160,8 @@ void Entity::UpdateY(float elapsed){
         if(position.y <= -2.0f+size.y*0.5){
             position.y = -2.0f+size.y*0.5;
             collideBottom = true;
+//            velocity.y *= -0.15;
+            velocity.y = 0.0f;
         }
         
     }else if(entityType == ENTITY_ENEMY_SNAIL){
@@ -179,6 +179,7 @@ void Entity::UpdateY(float elapsed){
     }
     
 }
+
 
 void Entity::Render(ShaderProgram* program, Entity* player, float elapsed){
     
@@ -381,8 +382,11 @@ bool Entity::CollidesWithX(Entity* entity, GameMode& mode){
         return false;
     }else{
         if(entity->entityType == ENTITY_COIN){
-            entity->position.x = -2000.0f;
+            entity->position.x += -2000.0f;
+            
             mode = STATE_WIN;
+            
+            entity->position.x -= -2000.0f;
             
         }else if(entity->entityType == ENTITY_STATIC){
             double Xpenetration = 0.0f;
@@ -412,9 +416,11 @@ bool Entity::CollidesWithY(Entity* entity, GameMode& mode){
         return false;
     }else{
         if(entity->entityType == ENTITY_COIN){
-            entity->position.x = -2000.0f;
+            entity->position.x += 2000.0f;
             
             mode = STATE_WIN;
+            
+            entity->position.x -= 2000.0f;
         }else if(entity->entityType == ENTITY_STATIC){
             double Ypenetration = 0.0f;
             
@@ -431,6 +437,8 @@ bool Entity::CollidesWithY(Entity* entity, GameMode& mode){
             }
             
             velocity.y = 0.0f;
+            //Restituution val set to 0.2
+//            velocity.y *= -0.15;
             
         }else if(entity->entityType == ENTITY_ENEMY_SNAIL || entity->entityType == ENTITY_ENEMY_FLY){
             if(position.y>entity->position.y){
