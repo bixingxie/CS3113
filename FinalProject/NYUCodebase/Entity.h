@@ -40,9 +40,9 @@ public:
     
     void animate(ShaderProgram* program, float elapsed);
     
-    bool CollidesWithX(Entity* entity, GameMode& mode);
+    bool CollidesWithX(Entity* entity, GameMode& mode, Entity* player);
     
-    bool CollidesWithY(Entity* entity, GameMode& mode);
+    bool CollidesWithY(Entity* entity, GameMode& mode, Entity* player);
                        
     
     SheetSprite sprite;

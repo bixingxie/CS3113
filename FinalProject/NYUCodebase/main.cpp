@@ -53,7 +53,7 @@ GLuint LoadTexture(const char* filepath){
 
 class Particle {
 public:
-    Particle(float x, float y):position(x, y, 0.0f), velocity(0.0f, 0.2f, 0.0f), size(1.0f, 1.0f, 1.0f){}
+    Particle(float x, float y):position(x, y, 0.0f), velocity(0.0f, 0.2f, 0.0f), size(0.4f, 0.4f, 1.0f){}
 
     Vector3 position;
     Vector3 velocity;
@@ -64,7 +64,7 @@ public:
 class ParticleEmitter{
 public:
     ParticleEmitter(unsigned int particleCount, float x, float y):
-    position(x, y, 0.0f), gravity(-0.2f), maxLifetime(2.0f){
+    position(x, y, 0.0f), gravity(-0.02f), maxLifetime(1.5f){
         for(int i=0; i < particleCount; i++){
             Particle newParticle(position.x, position.y);
             newParticle.lifetime = ((float)rand()/(float)RAND_MAX) * maxLifetime;
@@ -151,7 +151,7 @@ public:
     };
     
 
-    float startSize = 0.5f;
+    float startSize = 0.4f;
     float endSize = 0.0f;
     Vector3 position;
     float gravity;
@@ -249,7 +249,7 @@ public:
 
 class gameState{
 public:
-    gameState(GLuint StateNum):emit(12, 0.3, -1.8)
+    gameState(GLuint StateNum):emit(12, -0.65, -1.9), emit2(6, 1.0, -1.9)
     {
         fontTexture = LoadTexture(RESOURCE_FOLDER"font1.png");
         alienTexture = LoadTexture(RESOURCE_FOLDER"alienGreen.png");
@@ -360,7 +360,7 @@ public:
             
             Entity* wood1 = new Entity(woodSheet, -1.0f, -1.3f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood1);
-            Entity* wood2 = new Entity(woodSheet, 1.1f, -0.32f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
+            Entity* wood2 = new Entity(woodSheet, 1.1f, -0.35f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood2);
             Entity* wood3 = new Entity(woodSheet, -1.0f, 1.0f, 2.5f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, ENTITY_STATIC);
             woods.push_back(wood3);
@@ -451,6 +451,7 @@ public:
     Mix_Chunk* jumpSound;
     
     ParticleEmitter emit;
+    ParticleEmitter emit2;
 };
 
 void drawBackground(ShaderProgram* program, GLuint textureID, gameState* gameState){
@@ -534,7 +535,7 @@ void processGameInputLevel2(SDL_Event* event, bool& done, gameState* gameState){
         }else if(event->type == SDL_KEYDOWN){
             if(event->key.keysym.scancode == SDL_SCANCODE_SPACE && gameState->player.collideBottom == true){
                 Mix_PlayChannel(-1, gameState->jumpSound, 0);
-                gameState->player.velocity.y = 2.0f;
+                gameState->player.velocity.y = 1.98f;
             }
         }
     }
@@ -668,12 +669,12 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode& mode){
     gameState->snail02.UpdateY(elapsed);
     gameState->snail03.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr, mode);
+        gameState->player.CollidesWithY(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithY(&gameState->coin, mode);
-    gameState->player.CollidesWithY(&gameState->snail01, mode);
-    gameState->player.CollidesWithY(&gameState->snail02, mode);
-    gameState->player.CollidesWithY(&gameState->snail03, mode);
+    gameState->player.CollidesWithY(&gameState->coin, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail01, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail02, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail03, mode, &gameState->player);
     
     
     gameState->player.UpdateX(elapsed, mode, gameState->player);
@@ -682,12 +683,12 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode& mode){
     gameState->snail03.UpdateX(elapsed, mode, gameState->player);
     
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr, mode);
+        gameState->player.CollidesWithX(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithX(&gameState->coin, mode);
-    gameState->player.CollidesWithX(&gameState->snail01, mode);
-    gameState->player.CollidesWithX(&gameState->snail02, mode);
-    gameState->player.CollidesWithX(&gameState->snail03, mode);
+    gameState->player.CollidesWithX(&gameState->coin, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail01, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail02, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail03, mode, &gameState->player);
     
     gameState->emit.Update(elapsed);
     
@@ -711,11 +712,11 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode& mode){
     gameState->snail04.UpdateY(elapsed);
     gameState->snail05.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr, mode);
+        gameState->player.CollidesWithY(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithY(&gameState->coin, mode);
-    gameState->player.CollidesWithY(&gameState->snail04, mode);
-    gameState->player.CollidesWithY(&gameState->snail05, mode);
+    gameState->player.CollidesWithY(&gameState->coin, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail04, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail05, mode, &gameState->player);
     
 
     gameState->player.UpdateX(elapsed, mode, gameState->player);
@@ -723,11 +724,13 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode& mode){
     gameState->snail05.UpdateX(elapsed, mode, gameState->player);
 
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr, mode);
+        gameState->player.CollidesWithX(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithX(&gameState->coin, mode);
-    gameState->player.CollidesWithX(&gameState->snail04, mode);
-    gameState->player.CollidesWithX(&gameState->snail05, mode);
+    gameState->player.CollidesWithX(&gameState->coin, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail04, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail05, mode, &gameState->player);
+    
+    gameState->emit2.Update(elapsed);
     
 }
 
@@ -751,14 +754,14 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode& mode){
 //    gameState->snail04.UpdateY(elapsed);
     gameState->snail05.UpdateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr, mode);
+        gameState->player.CollidesWithY(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithY(&gameState->coin, mode);
-    gameState->player.CollidesWithY(&gameState->snail01, mode);
-    gameState->player.CollidesWithY(&gameState->snail02, mode);
-    gameState->player.CollidesWithY(&gameState->snail03, mode);
-    gameState->player.CollidesWithY(&gameState->snail05, mode);
-    gameState->player.CollidesWithY(&gameState->fly, mode);
+    gameState->player.CollidesWithY(&gameState->coin, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail01, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail02, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail03, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->snail05, mode, &gameState->player);
+    gameState->player.CollidesWithY(&gameState->fly, mode, &gameState->player);
 
 
     gameState->player.UpdateX(elapsed, mode, gameState->player);
@@ -771,14 +774,14 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode& mode){
     
     
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr, mode);
+        gameState->player.CollidesWithX(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithX(&gameState->coin, mode);
-    gameState->player.CollidesWithX(&gameState->snail01, mode);
-    gameState->player.CollidesWithX(&gameState->snail02, mode);
-    gameState->player.CollidesWithX(&gameState->snail03, mode);
-    gameState->player.CollidesWithX(&gameState->snail05, mode);
-    gameState->player.CollidesWithX(&gameState->fly, mode);
+    gameState->player.CollidesWithX(&gameState->coin, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail01, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail02, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail03, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->snail05, mode, &gameState->player);
+    gameState->player.CollidesWithX(&gameState->fly, mode, &gameState->player);
 }
 
 void renderWin(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){
@@ -898,10 +901,10 @@ void renderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, m
 }
 
 void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapsed){
-    
     glUseProgram(program->programID);
     
-    light lights[4] = {*new light(gameState->player.position.x, gameState->player.position.y), *new light(0.3, -1.7f), *new light(1000.0f, 0.3f), *new light(1000.0f,-0.8f)};
+    
+    light lights[4] = {*new light(gameState->player.position.x, gameState->player.position.y), *new light(-0.65, -1.9f), *new light(1000.0f, 0.3f), *new light(1000.0f,-0.8f)};
     program->SetLightPos(lights);
     program->SetLightIntensity(0.5f);
 //    program->SetLightPos(gameState->player.position.x, gameState->player.position.y);
@@ -922,7 +925,7 @@ void renderGameLevel1(ShaderProgram* program, gameState* gameState, float elapse
 }
 
 void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapsed){
-    light lights[4] = {*new light(gameState->player.position.x, gameState->player.position.y), *new light(-1000.0f, 0.3f), *new light(1000.0f, 0.3f), *new light(1000.0f,-0.8f)};
+    light lights[4] = {*new light(gameState->player.position.x, gameState->player.position.y), *new light(gameState->emit2.position.x, gameState->emit2.position.y), *new light(1000.0f, 0.3f), *new light(1000.0f,-0.8f)};
     program->SetLightPos(lights);
     program->SetLightIntensity(0.5f);
 //    program->SetLightPos(gameState->player.position.x, gameState->player.position.y);
@@ -936,6 +939,8 @@ void renderGameLevel2(ShaderProgram* program, gameState* gameState, float elapse
     gameState->snail04.Render(program, &gameState->player, elapsed);
     gameState->snail05.Render(program, &gameState->player, elapsed);
     gameState->coin.Render(program, &gameState->player, elapsed);
+    
+    gameState->emit2.Render(program);
 }
 
 void renderGameLevel3(ShaderProgram* program, gameState* gameState, float elapsed){

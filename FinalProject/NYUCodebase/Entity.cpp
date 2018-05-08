@@ -46,12 +46,12 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
             acceleration.x = 20.0f;
             Mix_PlayChannel(-1, screamSound, 0);
 //            player = Entity(playerSheet, -3.35f, -1.0f, 1.0f/1.3, 1.5f/1.3, 0.0f, 0.0f, 0.0f, -2.0f, ENTITY_PLAYER);
+            
+            mode = STATE_LOSE;
             player.position.x = -3.35f;
             player.position.y = -1.0f;
             player.velocity.x = 0.0f;
             player.velocity.y = 0.0f;
-            
-            mode = STATE_LOSE;
             
         }else{
             bool speed = false;
@@ -63,41 +63,66 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
                 if(position.x >= -1.5+2.5*0.5*0.2){
                     invertX = false;
                     acceleration.x = -1.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = -2.0f;
+                    }
                 }else if(position.x <= -1.5-2.5*0.5*0.2){
                     invertX = true;
                     acceleration.x = 1.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = 2.0f;
+                    }
                 }
             }else if(snailNum == 2){
                 if(position.x >= -1.5+0.8+2.5*0.5*0.2){
                     invertX = false;
                     acceleration.x = -1.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = -2.0f;
+                    }
                 }else if(position.x <= -1.5+0.8-2.5*0.5*0.2){
                     invertX = true;
                     acceleration.x = 1.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = 2.0f;
+                    }
                 }
             }else if(snailNum == 3){
                 if(position.x >= -1.5+2.4+2.5*0.5*0.2){
                     invertX = false;
                     acceleration.x = -1.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = -2.0f;
+                    }
                 }else if(position.x <= -1.5+2.4-2.5*0.5*0.2){
                     invertX = true;
                     acceleration.x = 1.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = 2.0f;
+                    }
                 }
             }else if(snailNum == 4){
                 if(position.x >= -1.0+2.5*0.5*0.2){
                     invertX = false;
-                    acceleration.x = -5.0f;
+                    acceleration.x = -3.0f;
+
                 }else if(position.x <= -1.0-2.5*0.5*0.2){
                     invertX = true;
-                    acceleration.x = 5.0f;
+                    acceleration.x = 3.0f;
                 }
             }else if(snailNum == 5){
                 if(position.x >= 3.55-1.0*0.5*0.2){
                     invertX = false;
-                    acceleration.x = -2.0f;
+                    acceleration.x = -4.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = -5.0f;
+                    }
                 }else if(position.x <= -3.55+1.0*0.5*0.2){
                     invertX = true;
-                    acceleration.x = 2.0f;
+                    acceleration.x = 4.0f;
+                    if(mode == STATE_GAME_LEVEL_3){
+                        acceleration.x = 5.0f;
+                    }
                 }
                 
             }
@@ -106,6 +131,7 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
                 acceleration.x*=1.025f;
             }
             speed = false;
+            
         }
         
         velocity.x = lerp(velocity.x, 0.0f, elapsed * 10.0f);
@@ -117,19 +143,19 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
         if(collideTop || collideBottom || collideLeft || collideRight){
             acceleration.x = 20.0f;
             Mix_PlayChannel(-1, screamSound, 0);
+            mode = STATE_LOSE;
             player.position.x = -3.35f;
             player.position.y = -1.0f;
             player.velocity.x = 0.0f;
             player.velocity.y = 0.0f;
-            mode = STATE_LOSE;
         }else{
             
             if(position.x <= -3.55+1.0*0.5*0.2){
                 invertX = true;
-                acceleration.x = 4.0f;
+                acceleration.x = 6.0f;
             }else if(position.x >= -2.2f){
                 invertX = false;
-                acceleration.x = -4.0f;
+                acceleration.x = -6.0f;
             }
             velocity.x = lerp(velocity.x, 0.0f, elapsed * 10.0f);
             velocity.x += acceleration.x * elapsed;
@@ -376,7 +402,7 @@ void Entity::animate(ShaderProgram* program, float elapsed){
     }
 }
 
-bool Entity::CollidesWithX(Entity* entity, GameMode& mode){
+bool Entity::CollidesWithX(Entity* entity, GameMode& mode, Entity* player){
     
     if(position.x+size.x*0.5 < entity->position.x-entity->size.x*0.5 || position.x-size.x*0.5 > entity->position.x+entity->size.x*0.5|| position.y+size.y*0.5 < entity->position.y-entity->size.y*0.5 || position.y-size.y*0.5 > entity->position.y+entity->size.y*0.5){
         return false;
@@ -385,6 +411,10 @@ bool Entity::CollidesWithX(Entity* entity, GameMode& mode){
             entity->position.x += -2000.0f;
             
             mode = STATE_WIN;
+            player->position.x = -3.35f;
+            player->position.y = -1.0f;
+            player->velocity.x = 0.0f;
+            player->velocity.y = 0.0f;
             
             entity->position.x -= -2000.0f;
             
@@ -410,7 +440,7 @@ bool Entity::CollidesWithX(Entity* entity, GameMode& mode){
     }
 }
 
-bool Entity::CollidesWithY(Entity* entity, GameMode& mode){
+bool Entity::CollidesWithY(Entity* entity, GameMode& mode, Entity* player){
     
     if(position.x+size.x*0.5 < entity->position.x-entity->size.x*0.5 || position.x-size.x*0.5 > entity->position.x+entity->size.x*0.5|| position.y+size.y*0.5 < entity->position.y-entity->size.y*0.5 || position.y-size.y*0.5 > entity->position.y+entity->size.y*0.5){
         return false;
@@ -419,6 +449,11 @@ bool Entity::CollidesWithY(Entity* entity, GameMode& mode){
             entity->position.x += 2000.0f;
             
             mode = STATE_WIN;
+            player->position.x = -3.35f;
+            player->position.y = -1.0f;
+            player->velocity.x = 0.0f;
+            player->velocity.y = 0.0f;
+            
             
             entity->position.x -= 2000.0f;
         }else if(entity->entityType == ENTITY_STATIC){
