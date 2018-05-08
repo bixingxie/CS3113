@@ -49,6 +49,7 @@
 		0518F1EB20A001600049558A /* scream.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1EA20A001600049558A /* scream.wav */; };
 		0518F1F320A02C490049558A /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0518F1F220A02C490049558A /* Entity.cpp */; };
 		0518F1FA20A1359F0049558A /* fire2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1F920A1359F0049558A /* fire2.png */; };
+		0518F1FC20A156600049558A /* lol.wav in Resources */ = {isa = PBXBuildFile; fileRef = 0518F1FB20A1565F0049558A /* lol.wav */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -115,6 +116,7 @@
 		0518F1F420A02C590049558A /* Entity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
 		0518F1F820A03BE10049558A /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		0518F1F920A1359F0049558A /* fire2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire2.png; sourceTree = "<group>"; };
+		0518F1FB20A1565F0049558A /* lol.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lol.wav; sourceTree = "<group>"; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -248,6 +250,7 @@
 				0518F1F220A02C490049558A /* Entity.cpp */,
 				0518F1E4209FF5D00049558A /* level1.WAV */,
 				0518F1EA20A001600049558A /* scream.wav */,
+				0518F1FB20A1565F0049558A /* lol.wav */,
 				0518F1E8209FFEC40049558A /* jump.wav */,
 				6DEF23BD1B96CC2600BCE792 /* Matrix.h */,
 				6DEF23BC1B96CC2600BCE792 /* Matrix.cpp */,
@@ -364,6 +367,7 @@
 				0518F1BC2091AF0F0049558A /* level2BG.png in Resources */,
 				0518F1DB20997F6A0049558A /* flyFly1.png in Resources */,
 				0518F19A20902C110049558A /* blockerBody.png in Resources */,
+				0518F1FC20A156600049558A /* lol.wav in Resources */,
 				0518F1A0209196470049558A /* p1_walk.png in Resources */,
 				0518F1C02092631F0049558A /* snail.png in Resources */,
 				0518F1E5209FF5D00049558A /* level1.WAV in Resources */,

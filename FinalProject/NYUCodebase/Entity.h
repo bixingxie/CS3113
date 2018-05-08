@@ -88,6 +88,7 @@ public:
     GLuint snailNum;
     
     Mix_Chunk* screamSound;
+    Mix_Chunk* lolSound;
     
 };
 

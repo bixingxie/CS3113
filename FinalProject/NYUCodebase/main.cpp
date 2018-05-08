@@ -339,8 +339,7 @@ public:
         font2.size.y = 0.2f;
         
         jumpSound = Mix_LoadWAV("jump.wav");
-        
-        
+
         if(StateNum == 1){
             float posX = -1.5f;
             float posY = -1.8f;

@@ -17,6 +17,7 @@ Entity::Entity(){};
 Entity::Entity(const SheetSprite& sprite, float positionX, float positionY, float sizeX, float sizeY, float velocityX, float velocityY, float accelerationX, float accelerationY, EntityType entityType):sprite(sprite), position(positionX, positionY, 0.0f), size(sizeX*sprite.size*sprite.width/sprite.height, sizeY*sprite.size, 0.0f), velocity(velocityX, velocityY, 0.0f), acceleration(accelerationX, accelerationY, 0.0f), entityType(entityType){
     
     screamSound = Mix_LoadWAV("scream.wav");
+    lolSound = Mix_LoadWAV("lol.wav");
     
 };
 
@@ -410,6 +411,8 @@ bool Entity::CollidesWithX(Entity* entity, GameMode& mode, Entity* player){
         if(entity->entityType == ENTITY_COIN){
             entity->position.x += -2000.0f;
             
+            Mix_PlayChannel(-1, lolSound, 0);
+            
             mode = STATE_WIN;
             player->position.x = -3.35f;
             player->position.y = -1.0f;
@@ -447,6 +450,8 @@ bool Entity::CollidesWithY(Entity* entity, GameMode& mode, Entity* player){
     }else{
         if(entity->entityType == ENTITY_COIN){
             entity->position.x += 2000.0f;
+            
+            Mix_PlayChannel(-1, lolSound, 0);
             
             mode = STATE_WIN;
             player->position.x = -3.35f;
