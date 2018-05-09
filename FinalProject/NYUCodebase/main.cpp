@@ -894,8 +894,9 @@ void renderMainMenu(ShaderProgram* program, ShaderProgram* program_untextured, m
     
     modelMatrix.Identity();
     modelMatrix.Translate(menuState->font4.position.x, menuState->font4.position.y, menuState->font4.position.z);
+    modelMatrix.Translate(0.2, 0.0, 0.0);
     program->SetModelMatrix(modelMatrix);
-    DrawText(program, menuState->fontTexture, "DON'T EXIT...", menuState->font4.size.x, -menuState->font4.size.x/2.5);
+    DrawText(program, menuState->fontTexture, "EXIT GAME", menuState->font4.size.x, -menuState->font4.size.x/2.5);
     
     
 }
