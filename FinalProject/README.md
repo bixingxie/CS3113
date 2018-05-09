@@ -35,6 +35,11 @@ Final project for CS-UY 3113, Intro to Game Programming. A 2D platformer with te
 
 Press "<-" to move left, "->" to move right and "space" to jump. To win, you must collect the coin placed somewhere in the current level. You die when you collide with any enemy.
 
+## Future Improvements 
+
+* More advanced AI (pathfinding, vision of cone, etc)
+* 3D graphics
+
 ## Author
 
 * **Bixing Xie** - (https://github.com/bixingxie)
