@@ -28,9 +28,10 @@ public:
     
     Entity(const SheetSprite& sprite, float positionX, float positionY, float sizeX, float sizeY, float velocityX, float velocityY, float accelerationX, float accelerationY, EntityType entityType);
     
-    void UpdateX(float elapsed, GameMode& mode, Entity& player);
+    void updateX(float elapsed, GameMode& mode, Entity& player);
     
-    void UpdateY(float elapsed);
+    void updateY(float elapsed);
+    
     
     void Render(ShaderProgram* program, Entity* player, float elapsed);
     
@@ -40,9 +41,9 @@ public:
     
     void animate(ShaderProgram* program, float elapsed);
     
-    bool CollidesWithX(Entity* entity, GameMode& mode, Entity* player);
+    bool collidesWithX(Entity* entity, GameMode& mode, Entity* player);
     
-    bool CollidesWithY(Entity* entity, GameMode& mode, Entity* player);
+    bool collidesWithY(Entity* entity, GameMode& mode, Entity* player);
                        
     
     SheetSprite sprite;

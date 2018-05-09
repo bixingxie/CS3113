@@ -663,31 +663,31 @@ void updateGameLevel1(float elapsed, gameState* gameState, GameMode& mode){
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    gameState->player.UpdateY(elapsed);
-    gameState->snail01.UpdateY(elapsed);
-    gameState->snail02.UpdateY(elapsed);
-    gameState->snail03.UpdateY(elapsed);
+    gameState->player.updateY(elapsed);
+    gameState->snail01.updateY(elapsed);
+    gameState->snail02.updateY(elapsed);
+    gameState->snail03.updateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr, mode, &gameState->player);
+        gameState->player.collidesWithY(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithY(&gameState->coin, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail01, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail02, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail03, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->coin, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail01, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail02, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail03, mode, &gameState->player);
     
     
-    gameState->player.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail01.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail02.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail03.UpdateX(elapsed, mode, gameState->player);
+    gameState->player.updateX(elapsed, mode, gameState->player);
+    gameState->snail01.updateX(elapsed, mode, gameState->player);
+    gameState->snail02.updateX(elapsed, mode, gameState->player);
+    gameState->snail03.updateX(elapsed, mode, gameState->player);
     
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr, mode, &gameState->player);
+        gameState->player.collidesWithX(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithX(&gameState->coin, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail01, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail02, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail03, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->coin, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail01, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail02, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail03, mode, &gameState->player);
     
     gameState->emit.Update(elapsed);
     
@@ -707,27 +707,27 @@ void updateGameLevel2(float elapsed, gameState* gameState, GameMode& mode){
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    gameState->player.UpdateY(elapsed);
-    gameState->snail04.UpdateY(elapsed);
-    gameState->snail05.UpdateY(elapsed);
+    gameState->player.updateY(elapsed);
+    gameState->snail04.updateY(elapsed);
+    gameState->snail05.updateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr, mode, &gameState->player);
+        gameState->player.collidesWithY(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithY(&gameState->coin, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail04, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail05, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->coin, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail04, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail05, mode, &gameState->player);
     
 
-    gameState->player.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail04.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail05.UpdateX(elapsed, mode, gameState->player);
+    gameState->player.updateX(elapsed, mode, gameState->player);
+    gameState->snail04.updateX(elapsed, mode, gameState->player);
+    gameState->snail05.updateX(elapsed, mode, gameState->player);
 
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr, mode, &gameState->player);
+        gameState->player.collidesWithX(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithX(&gameState->coin, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail04, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail05, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->coin, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail04, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail05, mode, &gameState->player);
     
     gameState->emit2.Update(elapsed);
     
@@ -746,41 +746,42 @@ void updateGameLevel3(float elapsed, gameState* gameState, GameMode& mode){
     gameState->player.collideRight = false;
     gameState->player.collideLeft = false;
     
-    gameState->player.UpdateY(elapsed);
-    gameState->snail01.UpdateY(elapsed);
-    gameState->snail02.UpdateY(elapsed);
-    gameState->snail03.UpdateY(elapsed);
+    gameState->player.updateY(elapsed);
+    gameState->snail01.updateY(elapsed);
+    gameState->snail02.updateY(elapsed);
+    gameState->snail03.updateY(elapsed);
 //    gameState->snail04.UpdateY(elapsed);
-    gameState->snail05.UpdateY(elapsed);
+    gameState->snail05.updateY(elapsed);
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithY(woodPtr, mode, &gameState->player);
+        gameState->player.collidesWithY(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithY(&gameState->coin, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail01, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail02, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail03, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->snail05, mode, &gameState->player);
-    gameState->player.CollidesWithY(&gameState->fly, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->coin, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail01, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail02, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail03, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->snail05, mode, &gameState->player);
+    gameState->player.collidesWithY(&gameState->fly, mode, &gameState->player);
 
 
-    gameState->player.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail01.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail02.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail03.UpdateX(elapsed, mode, gameState->player);
-    gameState->snail05.UpdateX(elapsed, mode, gameState->player);
-    gameState->fly.UpdateX(elapsed, mode, gameState->player);
+    gameState->player.updateX(elapsed, mode, gameState->player);
+    gameState->snail01.updateX(elapsed, mode, gameState->player);
+    gameState->snail02.updateX(elapsed, mode, gameState->player);
+    gameState->snail03.updateX(elapsed, mode, gameState->player);
+    gameState->snail05.updateX(elapsed, mode, gameState->player);
+    gameState->fly.updateX(elapsed, mode, gameState->player);
+
     
     
     
     for (Entity* woodPtr : gameState->woods){
-        gameState->player.CollidesWithX(woodPtr, mode, &gameState->player);
+        gameState->player.collidesWithX(woodPtr, mode, &gameState->player);
     }
-    gameState->player.CollidesWithX(&gameState->coin, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail01, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail02, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail03, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->snail05, mode, &gameState->player);
-    gameState->player.CollidesWithX(&gameState->fly, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->coin, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail01, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail02, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail03, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->snail05, mode, &gameState->player);
+    gameState->player.collidesWithX(&gameState->fly, mode, &gameState->player);
 }
 
 void renderWin(ShaderProgram* program, ShaderProgram* program_untextured, mainMenuState* menuState){

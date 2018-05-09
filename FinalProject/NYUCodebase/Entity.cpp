@@ -21,7 +21,7 @@ Entity::Entity(const SheetSprite& sprite, float positionX, float positionY, floa
     
 };
 
-void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
+void Entity::updateX(float elapsed, GameMode& mode, Entity& player){
     collideRight = false;
     collideLeft = false;
     
@@ -53,6 +53,9 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
             player.position.y = -1.0f;
             player.velocity.x = 0.0f;
             player.velocity.y = 0.0f;
+            
+            velocity.x = 0.0f;
+            acceleration.x = -3.0f;
             
         }else{
             bool speed = false;
@@ -170,7 +173,7 @@ void Entity::UpdateX(float elapsed, GameMode& mode, Entity& player){
     
 }
 
-void Entity::UpdateY(float elapsed){
+void Entity::updateY(float elapsed){
     collideBottom = false;
     collideTop = false;
 
@@ -403,7 +406,7 @@ void Entity::animate(ShaderProgram* program, float elapsed){
     }
 }
 
-bool Entity::CollidesWithX(Entity* entity, GameMode& mode, Entity* player){
+bool Entity::collidesWithX(Entity* entity, GameMode& mode, Entity* player){
     
     if(position.x+size.x*0.5 < entity->position.x-entity->size.x*0.5 || position.x-size.x*0.5 > entity->position.x+entity->size.x*0.5|| position.y+size.y*0.5 < entity->position.y-entity->size.y*0.5 || position.y-size.y*0.5 > entity->position.y+entity->size.y*0.5){
         return false;
@@ -418,6 +421,9 @@ bool Entity::CollidesWithX(Entity* entity, GameMode& mode, Entity* player){
             player->position.y = -1.0f;
             player->velocity.x = 0.0f;
             player->velocity.y = 0.0f;
+            
+            entity->velocity.x = 0.0f;
+            entity->velocity.y = 0.0f;
             
             entity->position.x -= -2000.0f;
             
@@ -443,7 +449,7 @@ bool Entity::CollidesWithX(Entity* entity, GameMode& mode, Entity* player){
     }
 }
 
-bool Entity::CollidesWithY(Entity* entity, GameMode& mode, Entity* player){
+bool Entity::collidesWithY(Entity* entity, GameMode& mode, Entity* player){
     
     if(position.x+size.x*0.5 < entity->position.x-entity->size.x*0.5 || position.x-size.x*0.5 > entity->position.x+entity->size.x*0.5|| position.y+size.y*0.5 < entity->position.y-entity->size.y*0.5 || position.y-size.y*0.5 > entity->position.y+entity->size.y*0.5){
         return false;
